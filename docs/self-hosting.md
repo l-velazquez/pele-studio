@@ -13,8 +13,8 @@ You can run it in three ways:
 ## Get the code
 
 ```sh
-git clone https://github.com/l-velazquez/pele-editor.git
-cd pele-editor
+git clone https://github.com/l-velazquez/pele-studio.git
+cd pele-studio
 ```
 
 ## 1. Development server
