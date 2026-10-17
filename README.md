@@ -17,7 +17,15 @@ Write Mermaid, pick a theme, export a presentation-ready diagram. Everything run
 
 Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name and logo belong to their creator.
 
-## Develop
+## Quick start
+
+With Docker (no Node needed):
+
+```sh
+docker compose up -d --build   # http://localhost:8080
+```
+
+With Node.js 22+:
 
 ```sh
 npm install
@@ -25,6 +33,8 @@ npm run dev      # http://localhost:5173
 npm test         # export pipeline tests
 npm run build    # static site in dist/
 ```
+
+To host it on a server with HTTPS, behind an existing reverse proxy, on a static host, or on GitHub Pages, see [docs/self-hosting.md](docs/self-hosting.md).
 
 ## How export works
 
@@ -40,15 +50,6 @@ Export renders the diagram again at its natural size, so the preview's zoom has 
 The resulting SVG keeps its appearance in apps that don't support CSS variables. PNG export draws that SVG onto a canvas.
 
 Apps such as PowerPoint and Illustrator ignore embedded `@font-face` and fall back to an installed font. If exact typography matters in those apps, use PNG.
-
-## Deploy
-
-The site is fully static, so you can serve `dist/` from any host. For Dokploy or any Docker host:
-
-```sh
-docker build -t pele-studio .
-docker run -p 8080:80 pele-studio
-```
 
 ## Project layout
 
