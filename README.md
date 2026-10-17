@@ -1,4 +1,7 @@
-<img src="assets/icon.svg" width="64" height="64" alt="">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/icon-dark.svg">
+  <img src="assets/icon.svg" width="64" height="64" alt="">
+</picture>
 
 # Pele Studio
 
@@ -12,7 +15,7 @@ Write Mermaid, pick a theme, export a presentation-ready diagram. Everything run
 - **Export**: PNG at 1–4× or SVG, with theme, transparent, or custom background, adjustable padding, and copy to clipboard.
 - **Templates, import, autosave**: 12 starter diagrams, `.mmd`/`.md` import (button, ⌘O, or drag and drop), and IndexedDB autosave.
 
-Rendering, parsing, and layout come from [Pele](https://pele.run).
+Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name and logo belong to their creator.
 
 ## Develop
 

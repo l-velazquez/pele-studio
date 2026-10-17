@@ -15,6 +15,7 @@ import { DEFAULT_SOURCE } from './templates'
 import { ensureFontLoaded, getFont, MONO_STACK } from './themes/fonts'
 import { DEFAULT_THEME } from './themes/presets'
 import { themeToVars, type Theme } from './themes/types'
+import logoUrl from '../assets/icon.svg'
 
 const DEFAULT_EXPORT: ExportOptions = { padding: 32, background: 'theme', customBackground: '#ffffff', embedFonts: true }
 
@@ -25,17 +26,6 @@ function useDebounced<T>(value: T, ms: number): T {
     return () => clearTimeout(id)
   }, [value, ms])
   return v
-}
-
-function Logo() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
-      <rect x="1" y="1" width="22" height="22" rx="6" fill="#18181b" />
-      <rect x="5" y="6" width="6" height="5" rx="1.5" fill="#fff" />
-      <rect x="13" y="13" width="6" height="5" rx="1.5" fill="#a5b4fc" />
-      <path d="M8 11v4.5h5" stroke="#fff" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-    </svg>
-  )
 }
 
 export default function App() {
@@ -157,7 +147,7 @@ export default function App() {
       >
         <header className="flex h-12 shrink-0 items-center gap-2 border-b border-zinc-200 bg-white px-3">
           <div className="flex items-center gap-2 pr-2">
-            <Logo />
+            <img src={logoUrl} alt="" className="size-6" />
             <span className="text-[13px] font-semibold tracking-tight">Pele Studio</span>
           </div>
           <div className="h-5 w-px bg-zinc-200" />
