@@ -150,7 +150,7 @@ Two settings matter:
 
 ### Option D: GitHub Pages
 
-`.github/workflows/pages.yml` runs the tests, builds, and deploys on every push to `main`. It sets `BASE_PATH` to `/<repo-name>/` for you. To turn it on for a fork, go to **Settings → Pages → Source** and select **GitHub Actions**.
+`.github/workflows/pages.yml` runs the tests, builds, and deploys on every push to `main`. The site is served from the custom domain in `public/CNAME` (`pele-studio.cc`), so it builds at the root path. To turn it on for a fork, go to **Settings → Pages → Source** and select **GitHub Actions**, then either put your own domain in `public/CNAME`, or delete that file and add `BASE_PATH: /<repo-name>/` to the build step's `env`.
 
 ## Updating
 

@@ -7,6 +7,8 @@
 
 Write Mermaid, pick a theme, export a presentation-ready diagram. Everything runs in your browser. Diagrams are never uploaded.
 
+**Try it at [pele-studio.cc](https://pele-studio.cc).**
+
 **Write → Preview → Customize → Export**
 
 - **Live editor**: CodeMirror with Mermaid highlighting. Errors are underlined in place while the last valid diagram stays on screen.
@@ -15,7 +17,7 @@ Write Mermaid, pick a theme, export a presentation-ready diagram. Everything run
 - **Export**: PNG at 1–4× or SVG, with theme, transparent, or custom background, adjustable padding, and copy to clipboard.
 - **Templates, import, autosave**: 12 starter diagrams, `.mmd`/`.md` import (button, ⌘O, or drag and drop), and IndexedDB autosave.
 
-Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name and logo belong to their creator.
+Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name belongs to its creator.
 
 ## Quick start
 
