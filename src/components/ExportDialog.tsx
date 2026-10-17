@@ -1,0 +1,200 @@
+import { cn } from '../lib/cn'
+import { Check, Copy, Download, Loader2 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  buildExportSvg,
+  clampScale,
+  copyPng,
+  downloadBlob,
+  rasterize,
+  slugify,
+  svgBlob,
+  type BackgroundMode,
+  type ComposedSvg,
+  type ExportOptions,
+} from '../lib/export'
+import type { Theme } from '../themes/types'
+import { Button, Modal, SectionLabel, Segmented, Slider } from './ui'
+
+type Format = 'png' | 'svg'
+
+function formatBytes(n: number) {
+  return n < 1024 * 1024 ? `${Math.round(n / 1024)} KB` : `${(n / 1024 / 1024).toFixed(1)} MB`
+}
+
+export function ExportDialog({
+  open,
+  onOpenChange,
+  source,
+  theme,
+  title,
+  options,
+  onOptionsChange,
+}: {
+  open: boolean
+  onOpenChange: (o: boolean) => void
+  source: string
+  theme: Theme
+  title: string
+  options: ExportOptions
+  onOptionsChange: (o: ExportOptions) => void
+}) {
+  const [format, setFormat] = useState<Format>('png')
+  const [scale, setScale] = useState(2)
+  const [composed, setComposed] = useState<ComposedSvg | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState<'download' | 'copy' | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (!open) return
+    let cancelled = false
+    buildExportSvg(source, theme, options).then(
+      (c) => !cancelled && (setComposed(c), setError(null)),
+      (e: Error) => !cancelled && (setComposed(null), setError(e.message)),
+    )
+    return () => {
+      cancelled = true
+    }
+  }, [open, source, theme, options])
+
+  const previewUrl = useMemo(() => (composed ? URL.createObjectURL(new Blob([composed.svg], { type: 'image/svg+xml' })) : null), [composed])
+  useEffect(() => () => void (previewUrl && URL.revokeObjectURL(previewUrl)), [previewUrl])
+
+  const set = (patch: Partial<ExportOptions>) => onOptionsChange({ ...options, ...patch })
+  const filename = `${slugify(title)}.${format}`
+  const effectiveScale = composed ? clampScale(composed.width, composed.height, scale) : scale
+  const outW = composed ? Math.round(composed.width * (format === 'png' ? effectiveScale : 1)) : 0
+  const outH = composed ? Math.round(composed.height * (format === 'png' ? effectiveScale : 1)) : 0
+
+  const download = async () => {
+    if (!composed) return
+    setBusy('download')
+    try {
+      downloadBlob(format === 'svg' ? svgBlob(composed) : await rasterize(composed, scale), filename)
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const copy = async () => {
+    if (!composed) return
+    setBusy('copy')
+    try {
+      if (format === 'svg') await navigator.clipboard.writeText(composed.svg)
+      else await copyPng(await rasterize(composed, scale))
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1600)
+    } catch (e) {
+      setError(`Copy failed: ${(e as Error).message}`)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  return (
+    <Modal open={open} onOpenChange={onOpenChange} title="Export diagram" description="Rendered fresh at full quality, independent of the preview zoom." className="w-[min(94vw,860px)]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[1fr_280px]">
+        <div className="flex min-h-[280px] items-center justify-center bg-zinc-50 p-6 md:rounded-bl-2xl">
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="Export preview"
+              className={cn('max-h-[52vh] max-w-full rounded shadow-[0_1px_3px_rgba(0,0,0,.08),0_10px_30px_rgba(0,0,0,.08)]', options.background === 'transparent' && 'checker')}
+            />
+          ) : error ? (
+            <p className="max-w-sm text-center text-sm text-red-600">{error}</p>
+          ) : (
+            <Loader2 className="size-5 animate-spin text-zinc-400" />
+          )}
+        </div>
+
+        <div className="flex flex-col gap-5 overflow-y-auto border-l border-zinc-100 p-5">
+          <section>
+            <SectionLabel>Format</SectionLabel>
+            <Segmented
+              label="Format"
+              value={format}
+              onChange={setFormat}
+              options={[
+                { value: 'png', label: 'PNG' },
+                { value: 'svg', label: 'SVG' },
+              ]}
+            />
+          </section>
+
+          {format === 'png' && (
+            <section>
+              <SectionLabel>Resolution</SectionLabel>
+              <Segmented
+                label="Resolution"
+                value={String(scale)}
+                onChange={(v) => setScale(Number(v))}
+                options={[1, 2, 3, 4].map((s) => ({ value: String(s), label: `${s}×` }))}
+              />
+            </section>
+          )}
+
+          <section>
+            <SectionLabel>Background</SectionLabel>
+            <Segmented<BackgroundMode>
+              label="Background"
+              value={options.background}
+              onChange={(background) => set({ background })}
+              options={[
+                { value: 'theme', label: 'Theme' },
+                { value: 'transparent', label: 'None' },
+                { value: 'custom', label: 'Custom' },
+              ]}
+            />
+            {options.background === 'custom' && (
+              <label className="mt-2 flex items-center gap-2 text-xs text-zinc-600">
+                <span className="relative size-6 overflow-hidden rounded-md ring-1 ring-zinc-900/10">
+                  <input type="color" value={options.customBackground} onChange={(e) => set({ customBackground: e.target.value })} className="absolute -inset-1 size-8" aria-label="Custom background" />
+                </span>
+                <span className="font-mono uppercase">{options.customBackground}</span>
+              </label>
+            )}
+          </section>
+
+          <section>
+            <SectionLabel action={<span className="text-xs text-zinc-500 tabular-nums">{options.padding}px</span>}>Padding</SectionLabel>
+            <Slider label="Padding" value={options.padding} min={0} max={160} step={4} onChange={(padding) => set({ padding })} />
+          </section>
+
+          <label className="flex items-start gap-2 text-xs text-zinc-600">
+            <input type="checkbox" checked={options.embedFonts} onChange={(e) => set({ embedFonts: e.target.checked })} className="mt-0.5 accent-zinc-900" />
+            <span>
+              Embed fonts
+              <span className="block text-zinc-400">Keeps typography exact. Turn off for smaller SVGs.</span>
+            </span>
+          </label>
+
+          <div className="mt-auto space-y-2 pt-2">
+            <p className="flex justify-between text-xs text-zinc-500">
+              <span className="truncate font-mono">{filename}</span>
+              {composed && (
+                <span className="tabular-nums">
+                  {outW}×{outH}
+                  {format === 'svg' && ` · ${formatBytes(composed.svg.length)}`}
+                </span>
+              )}
+            </p>
+            {format === 'png' && effectiveScale < scale && <p className="text-xs text-amber-600">Reduced to {effectiveScale.toFixed(1)}× to stay within browser canvas limits.</p>}
+            {error && composed && <p className="text-xs text-red-600">{error}</p>}
+            <Button variant="primary" className="h-9 w-full" onClick={download} disabled={!composed || !!busy}>
+              {busy === 'download' ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+              Download {format.toUpperCase()}
+            </Button>
+            <Button className="h-9 w-full" onClick={copy} disabled={!composed || !!busy}>
+              {copied ? <Check className="size-4 text-emerald-600" /> : busy === 'copy' ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
+              {copied ? 'Copied' : format === 'png' ? 'Copy image' : 'Copy SVG code'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  )
+}
