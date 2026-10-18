@@ -51,7 +51,7 @@ export function randomTheme(): Theme {
         accent: hsl(accentHue, 70, 42),
       }
 
-  const fonts = FONTS.filter((f) => f.id !== 'system')
+  const fonts = FONTS.filter((f) => f.url !== null)
   return {
     id: 'custom',
     name: 'Surprise',

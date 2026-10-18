@@ -1,7 +1,7 @@
 import { cn } from '../lib/cn'
 import { Check, RotateCcw, Shuffle } from 'lucide-react'
 import { Select } from 'radix-ui'
-import { FONTS, getFont } from '../themes/fonts'
+import { FONT_CATEGORIES, FONTS, getFont } from '../themes/fonts'
 import { PRESETS } from '../themes/presets'
 import { randomTheme } from '../themes/random'
 import { COLOR_LABELS, type ColorKey, type Theme } from '../themes/types'
@@ -139,19 +139,25 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
           </Select.Trigger>
           <Select.Portal>
             <Select.Content position="popper" sideOffset={4} className="z-50 w-(--radix-select-trigger-width) rounded-xl border border-zinc-200 bg-white p-1 shadow-xl">
-              <Select.Viewport>
-                {FONTS.map((f) => (
-                  <Select.Item
-                    key={f.id}
-                    value={f.id}
-                    className="flex cursor-default items-center justify-between rounded-md px-2.5 py-1.5 text-[13px] outline-none data-highlighted:bg-zinc-100"
-                    style={{ fontFamily: f.stack }}
-                  >
-                    <Select.ItemText>{f.label}</Select.ItemText>
-                    <Select.ItemIndicator>
-                      <Check className="size-3.5" />
-                    </Select.ItemIndicator>
-                  </Select.Item>
+              <Select.Viewport className="max-h-[min(24rem,var(--radix-select-content-available-height))]">
+                {FONT_CATEGORIES.map((cat, ci) => (
+                  <Select.Group key={cat.id}>
+                    {ci > 0 && <Select.Separator className="mx-1 my-1 h-px bg-zinc-100" />}
+                    <Select.Label className="px-2.5 pt-1.5 pb-1 text-[10px] font-medium tracking-wide text-zinc-400 uppercase">{cat.label}</Select.Label>
+                    {FONTS.filter((f) => f.category === cat.id).map((f) => (
+                      <Select.Item
+                        key={f.id}
+                        value={f.id}
+                        className="flex cursor-default items-center justify-between rounded-md px-2.5 py-1.5 text-[13px] outline-none data-highlighted:bg-zinc-100"
+                        style={{ fontFamily: f.stack }}
+                      >
+                        <Select.ItemText>{f.label}</Select.ItemText>
+                        <Select.ItemIndicator>
+                          <Check className="size-3.5" />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    ))}
+                  </Select.Group>
                 ))}
               </Select.Viewport>
             </Select.Content>
