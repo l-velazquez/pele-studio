@@ -5,7 +5,7 @@ import { themeToVars } from '../themes/types'
 import { TEMPLATES } from '../templates'
 import { parseColor, resolveColorMix, resolveSvg, substituteVars } from './resolve-svg'
 
-const vars = themeToVars(PRESETS[1], "'Inter Variable', sans-serif", 'monospace')
+const vars = themeToVars(PRESETS.find((p) => p.id === 'midnight')!, "'Inter Variable', sans-serif", 'monospace')
 
 describe('substituteVars', () => {
   it('uses env, then fallback, recursively', () => {
