@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    # Pele ships releases almost daily; check every day so bumps arrive one at a time.
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # Pele gets its own PR; everything else is batched into one.
+      dependencies:
+        patterns: ['*']
+        exclude-patterns: ['pele']
+    ignore:
+      # Types track the Node version CI runs on (22), not the latest Node.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
