@@ -2,6 +2,15 @@ import type { Theme } from './types'
 
 export const PRESETS: Theme[] = [
   {
+    id: 'studio',
+    name: 'Studio',
+    dark: false,
+    colors: { bg: '#ffffff', fg: '#1b2433', muted: '#5d6b82', line: '#3d4b63', surface: '#eef3fb', surfaceAlt: '#dde7f6', border: '#9fb3d1', accent: '#0b5cd5' },
+    series: ['#0b5cd5', '#00a3a3', '#f59f00', '#5c6ac4', '#e8590c', '#2b8a3e', '#c2255c', '#495057'],
+    font: 'plex',
+    radius: 4,
+  },
+  {
     id: 'paper',
     name: 'Paper',
     dark: false,
@@ -27,15 +36,6 @@ export const PRESETS: Theme[] = [
     series: ['#88c0d0', '#bf616a', '#a3be8c', '#ebcb8b', '#b48ead', '#81a1c1', '#d08770', '#8fbcbb'],
     font: 'plex',
     radius: 6,
-  },
-  {
-    id: 'corporate',
-    name: 'Corporate',
-    dark: false,
-    colors: { bg: '#ffffff', fg: '#1b2433', muted: '#5d6b82', line: '#3d4b63', surface: '#eef3fb', surfaceAlt: '#dde7f6', border: '#9fb3d1', accent: '#0b5cd5' },
-    series: ['#0b5cd5', '#00a3a3', '#f59f00', '#5c6ac4', '#e8590c', '#2b8a3e', '#c2255c', '#495057'],
-    font: 'plex',
-    radius: 4,
   },
   {
     id: 'pastel',
