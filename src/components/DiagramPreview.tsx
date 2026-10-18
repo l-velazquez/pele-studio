@@ -1,6 +1,7 @@
 import { cn } from '../lib/cn'
 import { AlertTriangle, Maximize, Minus, Plus } from 'lucide-react'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
+import { flushSync } from 'react-dom'
 import type { DiagramError } from '../lib/pele'
 import { Button, Tip } from './ui'
 
@@ -61,6 +62,23 @@ export function DiagramPreview({
       fit()
     }
   }, [diagram, fitKey, fit])
+
+  // Keep the diagram fixed on screen when side panels open or close. The view is anchored to the
+  // viewport's left edge, so shift it by however far that edge moved. flushSync applies the
+  // update before paint, avoiding a one-frame jump.
+  useEffect(() => {
+    const el = viewport.current
+    if (!el) return
+    let left = el.getBoundingClientRect().left
+    const observer = new ResizeObserver(() => {
+      const next = el.getBoundingClientRect().left
+      const dx = left - next
+      left = next
+      if (dx) flushSync(() => setView((v) => ({ ...v, x: v.x + dx })))
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const zoomAt = useCallback((factor: number, cx?: number, cy?: number) => {
     const el = viewport.current
