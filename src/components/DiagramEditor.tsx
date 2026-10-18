@@ -9,25 +9,26 @@ import { useEffect, useRef } from 'react'
 import type { DiagramError } from '../lib/pele'
 
 const highlight = HighlightStyle.define([
-  { tag: [t.keyword, t.typeName], color: '#7c3aed', fontWeight: '600' },
-  { tag: [t.string, t.special(t.string)], color: '#0f766e' },
-  { tag: [t.comment, t.lineComment], color: '#a1a1aa', fontStyle: 'italic' },
-  { tag: [t.number], color: '#c2410c' },
-  { tag: [t.operator, t.punctuation, t.arithmeticOperator], color: '#2563eb' },
-  { tag: [t.variableName, t.labelName], color: '#18181b' },
-  { tag: [t.definitionKeyword, t.modifier], color: '#be185d' },
+  { tag: [t.keyword, t.typeName], color: 'var(--cm-keyword)', fontWeight: '600' },
+  { tag: [t.string, t.special(t.string)], color: 'var(--cm-string)' },
+  { tag: [t.comment, t.lineComment], color: 'var(--cm-muted)', fontStyle: 'italic' },
+  { tag: [t.number], color: 'var(--cm-number)' },
+  { tag: [t.operator, t.punctuation, t.arithmeticOperator], color: 'var(--cm-operator)' },
+  { tag: [t.variableName, t.labelName], color: 'var(--cm-variable)' },
+  { tag: [t.definitionKeyword, t.modifier], color: 'var(--cm-modifier)' },
 ])
 
 const theme = EditorView.theme({
-  '&': { backgroundColor: 'transparent', color: '#27272a' },
-  '.cm-content': { padding: '12px 0', caretColor: '#18181b' },
-  '.cm-gutters': { backgroundColor: 'transparent', border: 'none', color: '#a1a1aa' },
+  '&': { backgroundColor: 'transparent', color: 'var(--cm-text)' },
+  '.cm-content': { padding: '12px 0', caretColor: 'var(--cm-caret)' },
+  '.cm-gutters': { backgroundColor: 'transparent', border: 'none', color: 'var(--cm-muted)' },
   '.cm-lineNumbers .cm-gutterElement': { padding: '0 8px 0 14px', minWidth: '28px' },
-  '.cm-activeLine': { backgroundColor: '#f4f4f580' },
-  '.cm-activeLineGutter': { backgroundColor: 'transparent', color: '#52525b' },
-  '.cm-selectionBackground, &.cm-focused .cm-selectionBackground, ::selection': { backgroundColor: '#c7d2fe !important' },
+  '.cm-activeLine': { backgroundColor: 'var(--cm-active-line)' },
+  '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--cm-gutter-active)' },
+  '.cm-selectionBackground, &.cm-focused .cm-selectionBackground, ::selection': { backgroundColor: 'var(--cm-selection) !important' },
   '.cm-lintRange-error': { backgroundImage: 'none', textDecoration: 'underline wavy #ef4444', textUnderlineOffset: '3px' },
-  '.cm-tooltip': { borderRadius: '8px', border: '1px solid #e4e4e7', overflow: 'hidden' },
+  '.cm-tooltip': { borderRadius: '8px', border: '1px solid var(--cm-border)', overflow: 'hidden', backgroundColor: 'var(--cm-tooltip-bg)', color: 'var(--cm-text)' },
+  '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--cm-caret)' },
 })
 
 export function DiagramEditor({ value, onChange, error }: { value: string; onChange: (v: string) => void; error: DiagramError | null }) {

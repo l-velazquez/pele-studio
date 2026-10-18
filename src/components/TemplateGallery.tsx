@@ -31,16 +31,16 @@ export function TemplateGallery({
             key={t.id}
             type="button"
             onClick={() => onPick(t)}
-            className="group overflow-hidden rounded-xl text-left ring-1 ring-zinc-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-zinc-400"
+            className="group overflow-hidden rounded-xl text-left ring-1 ring-zinc-200 dark:ring-zinc-800 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-zinc-400 dark:hover:ring-zinc-600"
           >
             <div
               className="thumb flex h-36 items-center justify-center overflow-hidden p-3"
               style={{ ...(vars as CSSProperties), background }}
               dangerouslySetInnerHTML={{ __html: out.ok ? out.result.svg : '' }}
             />
-            <div className="border-t border-zinc-100 bg-white px-3 py-2">
-              <p className="text-[13px] font-medium text-zinc-900">{t.name}</p>
-              <p className="text-xs text-zinc-500">{t.description}</p>
+            <div className="border-t border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2">
+              <p className="text-[13px] font-medium text-zinc-900 dark:text-zinc-100">{t.name}</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{t.description}</p>
             </div>
           </button>
         ))}
