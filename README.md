@@ -5,7 +5,7 @@
 
 # Pele Studio
 
-Write Mermaid, pick a theme, export a presentation-ready diagram. Everything runs in your browser. Diagrams are never uploaded.
+Create diagrams and export it.
 
 **Try it at [pele-studio.cc](https://pele-studio.cc).**
 
@@ -17,7 +17,19 @@ Write Mermaid, pick a theme, export a presentation-ready diagram. Everything run
 - **Export**: PNG at 1–4× or SVG, with theme, transparent, or custom background, adjustable padding, and copy to clipboard.
 - **Templates, import, autosave**: 12 starter diagrams, `.mmd`/`.md` import (button, ⌘O, or drag and drop), and IndexedDB autosave.
 
-Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name belongs to its creator.
+Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name belongs to its creator [@kepano](https://x.com/kepano).
+
+## About Pele
+
+[Pele](https://pele.run) [ˈpɛlɛ] is a rendering library for diagrams and charts, compatible with the latest Mermaid syntax. Per the Pele project, it is:
+
+- 100–500× faster than mermaid.js
+- 6× smaller bundle
+- No dependencies
+- Easy to theme
+- Responsive to device width
+
+It was built to make Obsidian fast and cohesively designed, as an alternative to Mermaid, which its creator found too big, too slow, and too hard to theme. Pele will be the renderer in the next version of Obsidian. It's named after the Hawaiian goddess of volcanoes and fire, and it's open source under the MIT license.
 
 ## Quick start
 
@@ -40,15 +52,6 @@ To host it on a server with HTTPS, behind an existing reverse proxy, on a static
 
 ## How export works
 
-The preview and the export use the same `render()` call, so what you see is what you get. The preview applies the theme through Pele's CSS variables (`--pele-bg`, `--pele-surface`, `--pele-series-1`, …), so switching themes never touches the diagram source.
-
-Export renders the diagram again at its natural size, so the preview's zoom has no effect on the output. It then makes the SVG standalone (`src/lib/resolve-svg.ts`):
-
-1. It substitutes every `var(--…)` with the theme value, including Pele's internal `--_x` aliases.
-2. It evaluates `color-mix(in srgb, …)` to literal hex colors.
-3. It moves `rx` from CSS into attributes for SVG 1.1 renderers.
-4. It embeds the selected font as base64 `@font-face`.
-
 The resulting SVG keeps its appearance in apps that don't support CSS variables. PNG export draws that SVG onto a canvas.
 
 Apps such as PowerPoint and Illustrator ignore embedded `@font-face` and fall back to an installed font. If exact typography matters in those apps, use PNG.
@@ -62,6 +65,10 @@ src/
   themes/       types.ts, presets.ts, fonts.ts, random.ts
   templates.ts
 ```
+
+
+## Disclaimer
+This happen was created using the assistance of artificial intelligence. 
 
 ## License
 
