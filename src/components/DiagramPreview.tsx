@@ -144,28 +144,28 @@ export function DiagramPreview({
             dangerouslySetInnerHTML={{ __html: diagram.svg }}
           />
         ) : (
-          !error && <div className="absolute inset-0 grid place-items-center text-sm text-zinc-400">Start typing Mermaid on the left</div>
+          !error && <div className="absolute inset-0 grid place-items-center text-sm text-zinc-400 dark:text-zinc-500">Start typing Mermaid on the left</div>
         )}
       </div>
 
       {error && (
         <div
           role="alert"
-          className="absolute right-4 bottom-4 left-4 mx-auto flex max-w-xl gap-3 rounded-xl border border-red-200 bg-white/95 p-3 text-[13px] shadow-lg backdrop-blur"
+          className="absolute right-4 bottom-4 left-4 mx-auto flex max-w-xl gap-3 rounded-xl border border-red-200 dark:border-red-900 bg-white/95 dark:bg-zinc-900/95 p-3 text-[13px] shadow-lg backdrop-blur"
         >
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-red-500" />
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-red-500 dark:text-red-400" />
           <div className="min-w-0">
-            <p className="font-medium text-zinc-900">
+            <p className="font-medium text-zinc-900 dark:text-zinc-100">
               {error.line > 0 ? `Line ${error.line}: ` : ''}
               {error.code === 'unsupported-diagram' ? 'Unknown diagram type' : 'Syntax error'}
-              {diagram && <span className="font-normal text-zinc-500"> · showing last valid diagram</span>}
+              {diagram && <span className="font-normal text-zinc-500 dark:text-zinc-400"> · showing last valid diagram</span>}
             </p>
-            <pre className="mt-1 max-h-24 overflow-auto font-mono text-xs whitespace-pre-wrap text-zinc-600">{error.message}</pre>
+            <pre className="mt-1 max-h-24 overflow-auto font-mono text-xs whitespace-pre-wrap text-zinc-600 dark:text-zinc-400">{error.message}</pre>
           </div>
         </div>
       )}
 
-      <div className="absolute top-3 right-3 flex items-center gap-0.5 rounded-xl border border-zinc-200 bg-white/95 p-1 shadow-sm backdrop-blur">
+      <div className="absolute top-3 right-3 flex items-center gap-0.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 p-1 shadow-sm backdrop-blur">
         <Tip label="Zoom out (−)">
           <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomAt(1 / 1.2)} aria-label="Zoom out">
             <Minus className="size-3.5" />
@@ -173,7 +173,7 @@ export function DiagramPreview({
         </Tip>
         <button
           type="button"
-          className="w-12 rounded-md text-center text-xs font-medium text-zinc-600 tabular-nums hover:bg-zinc-100"
+          className="w-12 rounded-md text-center text-xs font-medium text-zinc-600 dark:text-zinc-400 tabular-nums hover:bg-zinc-100 dark:hover:bg-zinc-800"
           onClick={() => zoomAt(1 / view.scale)}
           title="Reset to 100%"
         >
@@ -184,7 +184,7 @@ export function DiagramPreview({
             <Plus className="size-3.5" />
           </Button>
         </Tip>
-        <div className="mx-0.5 h-4 w-px bg-zinc-200" />
+        <div className="mx-0.5 h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
         <Tip label="Fit to screen (Shift+1)">
           <Button variant="ghost" size="icon" className="size-7" onClick={fit} aria-label="Fit to screen">
             <Maximize className="size-3.5" />

@@ -7,7 +7,8 @@ import { DiagramPreview, type PreviewDiagram } from './components/DiagramPreview
 import { ExportDialog } from './components/ExportDialog'
 import { TemplateGallery } from './components/TemplateGallery'
 import { ThemePanel } from './components/ThemePanel'
-import { Button, Tip, TooltipProvider } from './components/ui'
+import { AppearanceMenu, Button, Tip, TooltipProvider } from './components/ui'
+import { useAppearance } from './lib/appearance'
 import { backgroundColor, type ExportOptions } from './lib/export'
 import { renderDiagram } from './lib/pele'
 import { extractMermaid, loadDoc, saveDoc } from './lib/storage'
@@ -16,6 +17,7 @@ import { ensureFontLoaded, getFont, MONO_STACK } from './themes/fonts'
 import { DEFAULT_THEME } from './themes/presets'
 import { themeToVars, type Theme } from './themes/types'
 import logoUrl from '../assets/icon.svg'
+import logoDarkUrl from '../assets/icon-dark.svg'
 
 const REPO_URL = 'https://github.com/l-velazquez/pele-studio'
 
@@ -32,6 +34,7 @@ function useDebounced<T>(value: T, ms: number): T {
 
 export default function App() {
   const [loaded, setLoaded] = useState(false)
+  const [appearance, setAppearance] = useAppearance()
   const [title, setTitle] = useState('Untitled diagram')
   const [source, setSource] = useState(DEFAULT_SOURCE)
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME)
@@ -147,16 +150,17 @@ export default function App() {
           if (file) importFile(file)
         }}
       >
-        <header className="flex h-12 shrink-0 items-center gap-2 border-b border-zinc-200 bg-white px-3">
+        <header className="flex h-12 shrink-0 items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3">
           <div className="flex items-center gap-2 pr-2">
-            <img src={logoUrl} alt="" className="size-6" />
+            <img src={logoUrl} alt="" className="size-6 dark:hidden" />
+            <img src={logoDarkUrl} alt="" className="hidden size-6 dark:block" />
             <span className="text-[13px] font-semibold tracking-tight">Pele Studio</span>
           </div>
-          <div className="h-5 w-px bg-zinc-200" />
+          <div className="h-5 w-px bg-zinc-200 dark:bg-zinc-700" />
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-56 min-w-0 rounded-md px-2 py-1 text-[13px] text-zinc-700 outline-none hover:bg-zinc-100 focus:bg-zinc-100"
+            className="w-56 min-w-0 rounded-md px-2 py-1 text-[13px] text-zinc-700 dark:text-zinc-300 outline-none hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800"
             aria-label="Diagram title"
             spellCheck={false}
           />
@@ -167,24 +171,25 @@ export default function App() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"
-              className="inline-flex size-8 items-center justify-center rounded-lg text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="inline-flex size-8 items-center justify-center rounded-lg text-zinc-600 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               <svg viewBox="0 0 16 16" fill="currentColor" className="size-4" aria-hidden>
                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
               </svg>
             </a>
           </Tip>
+          <AppearanceMenu value={appearance} onChange={setAppearance} />
           <Tip label="Toggle code panel">
-            <Button variant="ghost" size="icon" onClick={() => setShowCode((v) => !v)} aria-label="Code panel" aria-pressed={showCode} className={cn(showCode && 'bg-zinc-100 text-zinc-900')}>
+            <Button variant="ghost" size="icon" onClick={() => setShowCode((v) => !v)} aria-label="Code panel" aria-pressed={showCode} className={cn(showCode && 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100')}>
               <Code2 className="size-4" />
             </Button>
           </Tip>
           <Tip label="Toggle design panel">
-            <Button variant="ghost" size="icon" onClick={() => setShowDesign((v) => !v)} aria-label="Design panel" aria-pressed={showDesign} className={cn(showDesign && 'bg-zinc-100 text-zinc-900')}>
+            <Button variant="ghost" size="icon" onClick={() => setShowDesign((v) => !v)} aria-label="Design panel" aria-pressed={showDesign} className={cn(showDesign && 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100')}>
               <Palette className="size-4" />
             </Button>
           </Tip>
-          <div className="h-5 w-px bg-zinc-200" />
+          <div className="h-5 w-px bg-zinc-200 dark:bg-zinc-700" />
           <Button onClick={() => setTemplatesOpen(true)}>
             <LayoutTemplate className="size-4" /> Templates
           </Button>
@@ -213,10 +218,10 @@ export default function App() {
 
         <main className="flex min-h-0 flex-1">
           {showCode && (
-            <aside className="flex w-[min(400px,38vw)] min-w-[280px] shrink-0 flex-col border-r border-zinc-200 bg-white">
-              <div className="flex h-9 items-center justify-between border-b border-zinc-100 px-4">
-                <span className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">Mermaid</span>
-                {outcome?.ok && <span className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500">{outcome.result.type}</span>}
+            <aside className="flex w-[min(400px,38vw)] min-w-[280px] shrink-0 flex-col border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+              <div className="flex h-9 items-center justify-between border-b border-zinc-100 dark:border-zinc-800 px-4">
+                <span className="text-[11px] font-semibold tracking-wider text-zinc-500 dark:text-zinc-400 uppercase">Mermaid</span>
+                {outcome?.ok && <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500 dark:text-zinc-400">{outcome.result.type}</span>}
               </div>
               <div className="min-h-0 flex-1">{loaded && <DiagramEditor value={source} onChange={setSource} error={error} />}</div>
             </aside>
@@ -227,14 +232,14 @@ export default function App() {
           </section>
 
           {showDesign && (
-            <aside className="w-[300px] shrink-0 overflow-y-auto border-l border-zinc-200 bg-white" aria-label="Design">
+            <aside className="w-[300px] shrink-0 overflow-y-auto border-l border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" aria-label="Design">
               <ThemePanel theme={theme} onChange={setTheme} />
             </aside>
           )}
         </main>
 
         {dragging && (
-          <div className="pointer-events-none fixed inset-3 z-50 grid place-items-center rounded-2xl border-2 border-dashed border-indigo-400 bg-indigo-50/80 text-sm font-medium text-indigo-700">
+          <div className="pointer-events-none fixed inset-3 z-50 grid place-items-center rounded-2xl border-2 border-dashed border-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/80 text-sm font-medium text-indigo-700 dark:text-indigo-300">
             Drop a .mmd or .md file to open it
           </div>
         )}

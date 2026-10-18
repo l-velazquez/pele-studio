@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Inter Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
@@ -7,8 +9,49 @@
 
 :root {
   color-scheme: light;
+  --checker-a: #fff;
+  --checker-b: #e4e4e7;
+  --dots-bg: #ebebee;
+  --dots-fg: #c9c9d0;
+  /* CodeMirror */
+  --cm-text: #27272a;
+  --cm-caret: #18181b;
+  --cm-muted: #a1a1aa;
+  --cm-gutter-active: #52525b;
+  --cm-active-line: #f4f4f580;
+  --cm-selection: #c7d2fe;
+  --cm-border: #e4e4e7;
+  --cm-tooltip-bg: #fff;
+  --cm-keyword: #7c3aed;
+  --cm-string: #0f766e;
+  --cm-number: #c2410c;
+  --cm-operator: #2563eb;
+  --cm-variable: #18181b;
+  --cm-modifier: #be185d;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --checker-a: #3f3f46;
+  --checker-b: #27272a;
+  --dots-bg: #0f0f11;
+  --dots-fg: #2e2e33;
+  --cm-text: #e4e4e7;
+  --cm-caret: #fafafa;
+  --cm-muted: #71717a;
+  --cm-gutter-active: #d4d4d8;
+  --cm-active-line: #27272a80;
+  --cm-selection: #3730a3;
+  --cm-border: #3f3f46;
+  --cm-tooltip-bg: #18181b;
+  --cm-keyword: #c4b5fd;
+  --cm-string: #5eead4;
+  --cm-number: #fdba74;
+  --cm-operator: #93c5fd;
+  --cm-variable: #f4f4f5;
+  --cm-modifier: #f9a8d4;
 }
 
 html,
@@ -22,20 +65,24 @@ body {
   background: #f4f4f5;
   color: #18181b;
 }
+.dark body {
+  background: #09090b;
+  color: #f4f4f5;
+}
 
 .canvas-dots {
-  background-color: #ebebee;
-  background-image: radial-gradient(circle, #c9c9d0 1px, transparent 1.2px);
+  background-color: var(--dots-bg);
+  background-image: radial-gradient(circle, var(--dots-fg) 1px, transparent 1.2px);
   background-size: 20px 20px;
 }
 
 .checker {
-  background-color: #fff;
+  background-color: var(--checker-a);
   background-image:
-    linear-gradient(45deg, #e4e4e7 25%, transparent 25%),
-    linear-gradient(-45deg, #e4e4e7 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #e4e4e7 75%),
-    linear-gradient(-45deg, transparent 75%, #e4e4e7 75%);
+    linear-gradient(45deg, var(--checker-b) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--checker-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--checker-b) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--checker-b) 75%);
   background-size: 16px 16px;
   background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 }

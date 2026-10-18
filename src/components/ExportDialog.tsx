@@ -97,7 +97,7 @@ export function ExportDialog({
   return (
     <Modal open={open} onOpenChange={onOpenChange} title="Export diagram" description="Rendered fresh at full quality, independent of the preview zoom." className="w-[min(94vw,860px)]">
       <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[1fr_280px]">
-        <div className="flex min-h-[280px] items-center justify-center bg-zinc-50 p-6 md:rounded-bl-2xl">
+        <div className="flex min-h-[280px] items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-6 md:rounded-bl-2xl">
           {previewUrl ? (
             <img
               src={previewUrl}
@@ -105,13 +105,13 @@ export function ExportDialog({
               className={cn('max-h-[52vh] max-w-full rounded shadow-[0_1px_3px_rgba(0,0,0,.08),0_10px_30px_rgba(0,0,0,.08)]', options.background === 'transparent' && 'checker')}
             />
           ) : error ? (
-            <p className="max-w-sm text-center text-sm text-red-600">{error}</p>
+            <p className="max-w-sm text-center text-sm text-red-600 dark:text-red-400">{error}</p>
           ) : (
-            <Loader2 className="size-5 animate-spin text-zinc-400" />
+            <Loader2 className="size-5 animate-spin text-zinc-400 dark:text-zinc-500" />
           )}
         </div>
 
-        <div className="flex flex-col gap-5 overflow-y-auto border-l border-zinc-100 p-5">
+        <div className="flex flex-col gap-5 overflow-y-auto border-l border-zinc-100 dark:border-zinc-800 p-5">
           <section>
             <SectionLabel>Format</SectionLabel>
             <Segmented
@@ -150,8 +150,8 @@ export function ExportDialog({
               ]}
             />
             {options.background === 'custom' && (
-              <label className="mt-2 flex items-center gap-2 text-xs text-zinc-600">
-                <span className="relative size-6 overflow-hidden rounded-md ring-1 ring-zinc-900/10">
+              <label className="mt-2 flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+                <span className="relative size-6 overflow-hidden rounded-md ring-1 ring-zinc-900/10 dark:ring-white/10">
                   <input type="color" value={options.customBackground} onChange={(e) => set({ customBackground: e.target.value })} className="absolute -inset-1 size-8" aria-label="Custom background" />
                 </span>
                 <span className="font-mono uppercase">{options.customBackground}</span>
@@ -160,20 +160,20 @@ export function ExportDialog({
           </section>
 
           <section>
-            <SectionLabel action={<span className="text-xs text-zinc-500 tabular-nums">{options.padding}px</span>}>Padding</SectionLabel>
+            <SectionLabel action={<span className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums">{options.padding}px</span>}>Padding</SectionLabel>
             <Slider label="Padding" value={options.padding} min={0} max={160} step={4} onChange={(padding) => set({ padding })} />
           </section>
 
-          <label className="flex items-start gap-2 text-xs text-zinc-600">
-            <input type="checkbox" checked={options.embedFonts} onChange={(e) => set({ embedFonts: e.target.checked })} className="mt-0.5 accent-zinc-900" />
+          <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+            <input type="checkbox" checked={options.embedFonts} onChange={(e) => set({ embedFonts: e.target.checked })} className="mt-0.5 accent-zinc-900 dark:accent-zinc-100" />
             <span>
               Embed fonts
-              <span className="block text-zinc-400">Keeps typography exact. Turn off for smaller SVGs.</span>
+              <span className="block text-zinc-400 dark:text-zinc-500">Keeps typography exact. Turn off for smaller SVGs.</span>
             </span>
           </label>
 
           <div className="mt-auto space-y-2 pt-2">
-            <p className="flex justify-between text-xs text-zinc-500">
+            <p className="flex justify-between text-xs text-zinc-500 dark:text-zinc-400">
               <span className="truncate font-mono">{filename}</span>
               {composed && (
                 <span className="tabular-nums">
@@ -182,14 +182,14 @@ export function ExportDialog({
                 </span>
               )}
             </p>
-            {format === 'png' && effectiveScale < scale && <p className="text-xs text-amber-600">Reduced to {effectiveScale.toFixed(1)}× to stay within browser canvas limits.</p>}
-            {error && composed && <p className="text-xs text-red-600">{error}</p>}
+            {format === 'png' && effectiveScale < scale && <p className="text-xs text-amber-600 dark:text-amber-400">Reduced to {effectiveScale.toFixed(1)}× to stay within browser canvas limits.</p>}
+            {error && composed && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
             <Button variant="primary" className="h-9 w-full" onClick={download} disabled={!composed || !!busy}>
               {busy === 'download' ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
               Download {format.toUpperCase()}
             </Button>
             <Button className="h-9 w-full" onClick={copy} disabled={!composed || !!busy}>
-              {copied ? <Check className="size-4 text-emerald-600" /> : busy === 'copy' ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
+              {copied ? <Check className="size-4 text-emerald-600 dark:text-emerald-400" /> : busy === 'copy' ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
               {copied ? 'Copied' : format === 'png' ? 'Copy image' : 'Copy SVG code'}
             </Button>
           </div>
