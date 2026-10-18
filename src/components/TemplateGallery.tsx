@@ -25,7 +25,7 @@ export function TemplateGallery({
 
   return (
     <Modal open={open} onOpenChange={onOpenChange} title="Templates" description="Start from an example. This replaces the current diagram." className="w-[min(94vw,980px)]">
-      <div className="grid grid-cols-2 gap-3 overflow-y-auto p-5 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid auto-rows-max grid-cols-2 gap-3 overflow-y-auto p-5 sm:grid-cols-3 lg:grid-cols-4">
         {thumbs.map(({ t, out }) => (
           <button
             key={t.id}
