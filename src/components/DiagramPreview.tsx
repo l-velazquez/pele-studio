@@ -45,6 +45,8 @@ export function DiagramPreview({
   /** Active pointers: one pans, two pinch-zoom around their midpoint. */
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const fitted = useRef<number | null>(null)
+  /** Viewport left edge the current view is positioned against; see the ResizeObserver below. */
+  const anchorLeft = useRef(0)
 
   const boardW = diagram ? diagram.width + 2 * padding : 0
   const boardH = diagram ? diagram.height + 2 * padding : 0
@@ -52,7 +54,8 @@ export function DiagramPreview({
   const fit = useCallback(() => {
     const el = viewport.current
     if (!el || !boardW) return
-    const { width, height } = el.getBoundingClientRect()
+    const { left, width, height } = el.getBoundingClientRect()
+    anchorLeft.current = left
     const margin = Math.min(48, width * 0.06)
     const scale = clamp(Math.min((width - margin * 2) / boardW, (height - margin * 2) / boardH, 1.5))
     setView({ scale, x: (width - boardW * scale) / 2, y: (height - boardH * scale) / 2 })
@@ -77,11 +80,11 @@ export function DiagramPreview({
   useEffect(() => {
     const el = viewport.current
     if (!el) return
-    let left = el.getBoundingClientRect().left
+    anchorLeft.current = el.getBoundingClientRect().left
     const observer = new ResizeObserver(() => {
       const rect = el.getBoundingClientRect()
-      const dx = left - rect.left
-      left = rect.left
+      const dx = anchorLeft.current - rect.left
+      anchorLeft.current = rect.left
       if (dx) flushSync(() => setView((v) => ({ ...v, x: v.x + dx })))
       // A window resize (e.g. rotating a phone) can strand the board outside the viewport; bring it back.
       const { view: v, boardW: w, boardH: h, fit } = latest.current

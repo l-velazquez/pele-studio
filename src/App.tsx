@@ -11,7 +11,7 @@ import { ThemePanel } from './components/ThemePanel'
 import { AppearanceMenu, Button, Tip, TooltipProvider } from './components/ui'
 import { useAppearance } from './lib/appearance'
 import { backgroundColor, type ExportOptions } from './lib/export'
-import { useIsMobile } from './lib/media'
+import { useFitsOnePanel, useIsMobile } from './lib/media'
 import { renderDiagram, renderKeepingSize } from './lib/pele'
 import { extractMermaid, loadDoc, saveDoc } from './lib/storage'
 import { DEFAULT_SOURCE } from './templates'
@@ -58,6 +58,25 @@ export default function App() {
   const [dragging, setDragging] = useState(false)
   const isMobile = useIsMobile()
   const [mobileTab, setMobileTab] = useState<MobileTab>('preview')
+  const onePanel = useFitsOnePanel()
+
+  // Switching between the phone and desktop layouts (e.g. rotating a phone) changes the canvas
+  // shape entirely, so re-fit rather than keep a pan/zoom chosen for the other layout.
+  const layoutRef = useRef(isMobile)
+  useEffect(() => {
+    if (layoutRef.current === isMobile) return
+    layoutRef.current = isMobile
+    setFitKey((k) => k + 1)
+  }, [isMobile])
+
+  const toggleCode = () => {
+    if (!showCode && onePanel) setShowDesign(false)
+    setShowCode(!showCode)
+  }
+  const toggleDesign = () => {
+    if (!showDesign && onePanel) setShowCode(false)
+    setShowDesign(!showDesign)
+  }
   const fileInput = useRef<HTMLInputElement>(null)
   /** Source text whose first successful render should re-fit the preview. */
   const pendingFit = useRef<string | null>(null)
@@ -213,12 +232,12 @@ export default function App() {
               </Tip>
               <AppearanceMenu value={appearance} onChange={setAppearance} />
               <Tip label="Toggle code panel">
-                <Button variant="ghost" size="icon" onClick={() => setShowCode((v) => !v)} aria-label="Code panel" aria-pressed={showCode} className={cn(showCode && 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100')}>
+                <Button variant="ghost" size="icon" onClick={toggleCode} aria-label="Code panel" aria-pressed={showCode} className={cn(showCode && 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100')}>
                   <Code2 className="size-4" />
                 </Button>
               </Tip>
               <Tip label="Toggle design panel">
-                <Button variant="ghost" size="icon" onClick={() => setShowDesign((v) => !v)} aria-label="Design panel" aria-pressed={showDesign} className={cn(showDesign && 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100')}>
+                <Button variant="ghost" size="icon" onClick={toggleDesign} aria-label="Design panel" aria-pressed={showDesign} className={cn(showDesign && 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100')}>
                   <Palette className="size-4" />
                 </Button>
               </Tip>

@@ -15,3 +15,6 @@ export function useMediaQuery(query: string): boolean {
 }
 
 export const useIsMobile = () => useMediaQuery(MOBILE_QUERY)
+
+/** Below Tailwind's `lg`, both side panels together would squeeze the preview to a sliver. */
+export const useFitsOnePanel = () => useMediaQuery('(max-width: 1023px)')
