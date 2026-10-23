@@ -28,6 +28,7 @@ export function DiagramPreview({
   padding,
   background,
   fitKey,
+  emptyHint = 'Start typing Mermaid on the left',
 }: {
   diagram: PreviewDiagram | null
   error: DiagramError | null
@@ -37,11 +38,15 @@ export function DiagramPreview({
   background: string | null
   /** Changing this re-fits the view (new template, import). */
   fitKey: number
+  emptyHint?: string
 }) {
   const viewport = useRef<HTMLDivElement>(null)
   const [view, setView] = useState<View>({ scale: 1, x: 0, y: 0 })
-  const drag = useRef<{ id: number; x: number; y: number } | null>(null)
+  /** Active pointers: one pans, two pinch-zoom around their midpoint. */
+  const pointers = useRef(new Map<number, { x: number; y: number }>())
   const fitted = useRef<number | null>(null)
+  /** Viewport left edge the current view is positioned against; see the ResizeObserver below. */
+  const anchorLeft = useRef(0)
 
   const boardW = diagram ? diagram.width + 2 * padding : 0
   const boardH = diagram ? diagram.height + 2 * padding : 0
@@ -49,8 +54,9 @@ export function DiagramPreview({
   const fit = useCallback(() => {
     const el = viewport.current
     if (!el || !boardW) return
-    const { width, height } = el.getBoundingClientRect()
-    const margin = 48
+    const { left, width, height } = el.getBoundingClientRect()
+    anchorLeft.current = left
+    const margin = Math.min(48, width * 0.06)
     const scale = clamp(Math.min((width - margin * 2) / boardW, (height - margin * 2) / boardH, 1.5))
     setView({ scale, x: (width - boardW * scale) / 2, y: (height - boardH * scale) / 2 })
   }, [boardW, boardH])
@@ -63,18 +69,26 @@ export function DiagramPreview({
     }
   }, [diagram, fitKey, fit])
 
+  const latest = useRef({ view, boardW, boardH, fit })
+  useLayoutEffect(() => {
+    latest.current = { view, boardW, boardH, fit }
+  })
+
   // Keep the diagram fixed on screen when side panels open or close. The view is anchored to the
   // viewport's left edge, so shift it by however far that edge moved. flushSync applies the
   // update before paint, avoiding a one-frame jump.
   useEffect(() => {
     const el = viewport.current
     if (!el) return
-    let left = el.getBoundingClientRect().left
+    anchorLeft.current = el.getBoundingClientRect().left
     const observer = new ResizeObserver(() => {
-      const next = el.getBoundingClientRect().left
-      const dx = left - next
-      left = next
+      const rect = el.getBoundingClientRect()
+      const dx = anchorLeft.current - rect.left
+      anchorLeft.current = rect.left
       if (dx) flushSync(() => setView((v) => ({ ...v, x: v.x + dx })))
+      // A window resize (e.g. rotating a phone) can strand the board outside the viewport; bring it back.
+      const { view: v, boardW: w, boardH: h, fit } = latest.current
+      if (w && (v.x > rect.width || v.y > rect.height || v.x + w * v.scale < 0 || v.y + h * v.scale < 0)) fit()
     })
     observer.observe(el)
     return () => observer.disconnect()
@@ -139,20 +153,35 @@ export function DiagramPreview({
         className="canvas-dots absolute inset-0 cursor-grab touch-none active:cursor-grabbing"
         onPointerDown={(e) => {
           if (e.button !== 0 && e.button !== 1) return
-          drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY }
+          pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
           e.currentTarget.setPointerCapture(e.pointerId)
         }}
         onPointerMove={(e) => {
-          const d = drag.current
-          if (!d || d.id !== e.pointerId) return
-          const dx = e.clientX - d.x
-          const dy = e.clientY - d.y
-          d.x = e.clientX
-          d.y = e.clientY
-          setView((v) => ({ ...v, x: v.x + dx, y: v.y + dy }))
+          const pts = pointers.current
+          const prev = pts.get(e.pointerId)
+          if (!prev) return
+          const next = { x: e.clientX, y: e.clientY }
+          pts.set(e.pointerId, next)
+          if (pts.size === 1) {
+            setView((v) => ({ ...v, x: v.x + next.x - prev.x, y: v.y + next.y - prev.y }))
+          } else if (pts.size === 2) {
+            const other = [...pts].find(([id]) => id !== e.pointerId)![1]
+            const rect = e.currentTarget.getBoundingClientRect()
+            const factor = Math.hypot(next.x - other.x, next.y - other.y) / (Math.hypot(prev.x - other.x, prev.y - other.y) || 1)
+            // Keep the content under the old midpoint pinned to the new midpoint.
+            const bx = (prev.x + other.x) / 2 - rect.left
+            const by = (prev.y + other.y) / 2 - rect.top
+            const ax = (next.x + other.x) / 2 - rect.left
+            const ay = (next.y + other.y) / 2 - rect.top
+            setView((v) => {
+              const scale = clamp(v.scale * factor)
+              const k = scale / v.scale
+              return { scale, x: ax - (bx - v.x) * k, y: ay - (by - v.y) * k }
+            })
+          }
         }}
-        onPointerUp={() => (drag.current = null)}
-        onPointerCancel={() => (drag.current = null)}
+        onPointerUp={(e) => pointers.current.delete(e.pointerId)}
+        onPointerCancel={(e) => pointers.current.delete(e.pointerId)}
         onDoubleClick={fit}
       >
         {diagram ? (
@@ -162,7 +191,7 @@ export function DiagramPreview({
             dangerouslySetInnerHTML={{ __html: diagram.svg }}
           />
         ) : (
-          !error && <div className="absolute inset-0 grid place-items-center text-sm text-zinc-400 dark:text-zinc-500">Start typing Mermaid on the left</div>
+          !error && <div className="absolute inset-0 grid place-items-center text-sm text-zinc-400 dark:text-zinc-500">{emptyHint}</div>
         )}
       </div>
 
@@ -185,8 +214,8 @@ export function DiagramPreview({
 
       <div className="absolute top-3 right-3 flex items-center gap-0.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 p-1 shadow-sm backdrop-blur">
         <Tip label="Zoom out (−)">
-          <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomAt(1 / 1.2)} aria-label="Zoom out">
-            <Minus className="size-3.5" />
+          <Button variant="ghost" size="icon" className="size-7 pointer-coarse:size-9" onClick={() => zoomAt(1 / 1.2)} aria-label="Zoom out">
+            <Minus className="size-3.5 pointer-coarse:size-4" />
           </Button>
         </Tip>
         <button
@@ -198,14 +227,14 @@ export function DiagramPreview({
           {Math.round(view.scale * 100)}%
         </button>
         <Tip label="Zoom in (+)">
-          <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomAt(1.2)} aria-label="Zoom in">
-            <Plus className="size-3.5" />
+          <Button variant="ghost" size="icon" className="size-7 pointer-coarse:size-9" onClick={() => zoomAt(1.2)} aria-label="Zoom in">
+            <Plus className="size-3.5 pointer-coarse:size-4" />
           </Button>
         </Tip>
         <div className="mx-0.5 h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
         <Tip label="Fit to screen (Shift+1)">
-          <Button variant="ghost" size="icon" className="size-7" onClick={fit} aria-label="Fit to screen">
-            <Maximize className="size-3.5" />
+          <Button variant="ghost" size="icon" className="size-7 pointer-coarse:size-9" onClick={fit} aria-label="Fit to screen">
+            <Maximize className="size-3.5 pointer-coarse:size-4" />
           </Button>
         </Tip>
       </div>

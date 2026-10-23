@@ -1,7 +1,7 @@
-import { Check, Monitor, Moon, Sun, X } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import { Dialog as D, DropdownMenu as DM, Slider as S, Switch as SW, ToggleGroup as TG, Tooltip as T } from 'radix-ui'
 import { useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
-import type { Appearance } from '../lib/appearance'
+import { APPEARANCES, type Appearance } from '../lib/appearance'
 import { cn } from '../lib/cn'
 
 type Variant = 'primary' | 'secondary' | 'ghost'
@@ -70,6 +70,8 @@ export function Modal({
           className={cn(
             'fixed top-1/2 left-1/2 z-50 flex max-h-[88vh] w-[min(92vw,720px)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl ring-1 ring-zinc-200 dark:ring-zinc-800',
             className,
+            // Phones get a full-width bottom sheet instead of a centered card.
+            'max-md:top-auto max-md:bottom-0 max-md:max-h-[92dvh] max-md:w-full max-md:translate-y-0 max-md:rounded-b-none max-md:pb-[env(safe-area-inset-bottom)]',
           )}
         >
           <div className="flex items-start justify-between gap-4 border-b border-zinc-100 dark:border-zinc-800 px-5 py-4">
@@ -244,12 +246,6 @@ export function SectionLabel({ children, action }: { children: ReactNode; action
     </div>
   )
 }
-
-const APPEARANCES: { value: Appearance; label: string; icon: typeof Sun }[] = [
-  { value: 'light', label: 'Light', icon: Sun },
-  { value: 'dark', label: 'Dark', icon: Moon },
-  { value: 'system', label: 'System', icon: Monitor },
-]
 
 export function AppearanceMenu({ value, onChange }: { value: Appearance; onChange: (a: Appearance) => void }) {
   const Current = APPEARANCES.find((a) => a.value === value)!.icon

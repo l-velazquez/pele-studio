@@ -155,6 +155,11 @@ export async function copyPng(blob: Blob): Promise<void> {
   await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
 }
 
+/** True when the browser can hand this file to the OS share sheet (e.g. Save Image, AirDrop, Messages). */
+export function canShareFile(file: File): boolean {
+  return typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })
+}
+
 export function slugify(name: string): string {
   return (
     name

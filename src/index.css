@@ -59,6 +59,9 @@ body,
 #root {
   height: 100%;
 }
+#root {
+  height: 100dvh;
+}
 
 body {
   margin: 0;
@@ -103,6 +106,14 @@ body {
 .cm-scroller {
   font-family: var(--font-mono);
   line-height: 1.6;
+}
+
+/* iOS zooms the page when focusing text under 16px; touch devices get 16px fields instead. */
+@media (pointer: coarse) {
+  .cm-editor,
+  input:not([type='color'], [type='checkbox']) {
+    font-size: 16px !important;
+  }
 }
 
 input[type='color'] {

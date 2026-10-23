@@ -25,7 +25,7 @@ export function TemplateGallery({
 
   return (
     <Modal open={open} onOpenChange={onOpenChange} title="Templates" description="Start from an example. This replaces the current diagram." className="w-[min(94vw,980px)]">
-      <div className="grid auto-rows-max grid-cols-2 gap-3 overflow-y-auto p-5 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid auto-rows-max grid-cols-2 gap-3 overflow-y-auto p-5 max-sm:gap-2 max-sm:p-3 sm:grid-cols-3 lg:grid-cols-4">
         {thumbs.map(({ t, out }) => (
           <button
             key={t.id}
@@ -34,7 +34,7 @@ export function TemplateGallery({
             className="group overflow-hidden rounded-xl text-left ring-1 ring-zinc-200 dark:ring-zinc-800 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-zinc-400 dark:hover:ring-zinc-600"
           >
             <div
-              className="thumb flex h-36 items-center justify-center overflow-hidden p-3"
+              className="thumb flex h-28 items-center sm:h-36 justify-center overflow-hidden p-3"
               style={{ ...(vars as CSSProperties), background }}
               dangerouslySetInnerHTML={{ __html: out.ok ? out.result.svg : '' }}
             />

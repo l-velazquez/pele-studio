@@ -1,6 +1,13 @@
+import { Monitor, Moon, Sun } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export type Appearance = 'light' | 'dark' | 'system'
+
+export const APPEARANCES: { value: Appearance; label: string; icon: typeof Sun }[] = [
+  { value: 'light', label: 'Light', icon: Sun },
+  { value: 'dark', label: 'Dark', icon: Moon },
+  { value: 'system', label: 'System', icon: Monitor },
+]
 
 /** Kept in localStorage (not IndexedDB) so index.html can apply it before first paint. */
 const KEY = 'pele-studio:appearance'
