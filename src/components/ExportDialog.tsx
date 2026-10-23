@@ -96,13 +96,13 @@ export function ExportDialog({
 
   return (
     <Modal open={open} onOpenChange={onOpenChange} title="Export diagram" description="Rendered fresh at full quality, independent of the preview zoom." className="w-[min(94vw,860px)]">
-      <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[1fr_280px]">
-        <div className="flex min-h-[280px] items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-6 md:rounded-bl-2xl">
+      <div className="grid min-h-0 flex-1 grid-cols-1 max-md:overflow-y-auto md:grid-cols-[1fr_280px]">
+        <div className="flex min-h-[180px] items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4 md:min-h-[280px] md:rounded-bl-2xl md:p-6">
           {previewUrl ? (
             <img
               src={previewUrl}
               alt="Export preview"
-              className={cn('max-h-[52vh] max-w-full rounded shadow-[0_1px_3px_rgba(0,0,0,.08),0_10px_30px_rgba(0,0,0,.08)]', options.background === 'transparent' && 'checker')}
+              className={cn('max-h-[30dvh] max-w-full md:max-h-[52vh] rounded shadow-[0_1px_3px_rgba(0,0,0,.08),0_10px_30px_rgba(0,0,0,.08)]', options.background === 'transparent' && 'checker')}
             />
           ) : error ? (
             <p className="max-w-sm text-center text-sm text-red-600 dark:text-red-400">{error}</p>
@@ -111,7 +111,7 @@ export function ExportDialog({
           )}
         </div>
 
-        <div className="flex flex-col gap-5 overflow-y-auto border-l border-zinc-100 dark:border-zinc-800 p-5">
+        <div className="flex flex-col gap-5 border-zinc-100 dark:border-zinc-800 p-5 max-md:border-t md:overflow-y-auto md:border-l">
           <section>
             <SectionLabel>Format</SectionLabel>
             <Segmented
