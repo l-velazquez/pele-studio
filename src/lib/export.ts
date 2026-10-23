@@ -85,7 +85,7 @@ export async function buildExportSvg(source: string, theme: Theme, opts: ExportO
   const font = getFont(theme.font)
   await ensureFontLoaded(font)
   forgetTextWidths()
-  const outcome = renderDiagram(source, { fontFamily: font.stack, fontFamilyMono: MONO_STACK })
+  const outcome = renderDiagram(source, { fontFamily: font.stack, fontFamilyMono: MONO_STACK, fontSize: theme.fontSize })
   if (!outcome.ok) throw new Error(outcome.error.message)
 
   const vars = themeToVars(theme, font.stack, MONO_STACK)

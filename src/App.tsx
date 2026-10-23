@@ -15,7 +15,7 @@ import { extractMermaid, loadDoc, saveDoc } from './lib/storage'
 import { DEFAULT_SOURCE } from './templates'
 import { ensureFontLoaded, getFont, MONO_STACK } from './themes/fonts'
 import { DEFAULT_THEME } from './themes/presets'
-import { themeToVars, type Theme } from './themes/types'
+import { DEFAULT_FONT_SIZE, themeToVars, type Theme } from './themes/types'
 import logoUrl from '../assets/icon.svg'
 import logoDarkUrl from '../assets/icon-dark.svg'
 
@@ -57,7 +57,8 @@ export default function App() {
         pendingFit.current = doc.source
         setTitle(doc.title)
         setSource(doc.source)
-        setTheme(doc.theme)
+        // Docs saved before font size existed lack the field.
+        setTheme({ ...doc.theme, fontSize: doc.theme.fontSize ?? DEFAULT_FONT_SIZE })
         setExportOptions({ ...DEFAULT_EXPORT, ...doc.exportOptions })
       }
       setLoaded(true)
@@ -86,10 +87,10 @@ export default function App() {
 
   const renderSource = useDebounced(source, 80)
   const outcome = useMemo(
-    () => (fontVersion > 0 ? renderDiagram(renderSource, { fontFamily: font.stack, fontFamilyMono: MONO_STACK }) : null),
+    () => (fontVersion > 0 ? renderDiagram(renderSource, { fontFamily: font.stack, fontFamilyMono: MONO_STACK, fontSize: theme.fontSize }) : null),
     // fontVersion invalidates cached measurements after a font finishes loading.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [renderSource, font.stack, fontVersion],
+    [renderSource, font.stack, theme.fontSize, fontVersion],
   )
 
   const lastGood = useRef<PreviewDiagram | null>(null)

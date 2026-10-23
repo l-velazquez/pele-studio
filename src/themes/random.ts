@@ -1,5 +1,5 @@
 import { FONTS } from './fonts'
-import type { Theme } from './types'
+import { DEFAULT_FONT_SIZE, type Theme } from './types'
 
 function hsl(h: number, s: number, l: number): string {
   h = ((h % 360) + 360) % 360
@@ -60,5 +60,6 @@ export function randomTheme(): Theme {
     series,
     font: fonts[Math.floor(Math.random() * fonts.length)].id,
     radius: [0, 4, 6, 8, 12, 16][Math.floor(Math.random() * 6)],
+    fontSize: DEFAULT_FONT_SIZE,
   }
 }

@@ -4,8 +4,8 @@ import { Select } from 'radix-ui'
 import { FONT_CATEGORIES, FONTS, getFont } from '../themes/fonts'
 import { PRESETS } from '../themes/presets'
 import { randomTheme } from '../themes/random'
-import { COLOR_LABELS, type ColorKey, type Theme } from '../themes/types'
-import { Button, SectionLabel, Slider, Tip } from './ui'
+import { COLOR_LABELS, FONT_SIZE_RANGE, type ColorKey, type Theme } from '../themes/types'
+import { Button, PxField, SectionLabel, Slider, Tip } from './ui'
 
 function PresetCard({ preset, active, onSelect }: { preset: Theme; active: boolean; onSelect: () => void }) {
   const c = preset.colors
@@ -71,6 +71,8 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
   const modified = base ? JSON.stringify(base) !== JSON.stringify(theme) : false
 
   const setColor = (key: ColorKey, value: string) => onChange({ ...theme, colors: { ...theme.colors, [key]: value } })
+  // Font size is a reading preference more than a palette choice, so it carries across theme switches.
+  const pickTheme = (t: Theme) => onChange({ ...t, fontSize: theme.fontSize })
   const setSeries = (i: number, value: string) => onChange({ ...theme, series: theme.series.map((c, j) => (j === i ? value : c)) })
 
   return (
@@ -79,7 +81,7 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
         <SectionLabel
           action={
             <Tip label="Generate a coordinated palette">
-              <Button size="sm" variant="ghost" onClick={() => onChange(randomTheme())} className="-mr-1.5">
+              <Button size="sm" variant="ghost" onClick={() => pickTheme(randomTheme())} className="-mr-1.5">
                 <Shuffle className="size-3.5" /> Surprise me
               </Button>
             </Tip>
@@ -89,7 +91,7 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
         </SectionLabel>
         <div className="grid grid-cols-2 gap-2">
           {PRESETS.map((p) => (
-            <PresetCard key={p.id} preset={p} active={theme.id === p.id} onSelect={() => onChange(p)} />
+            <PresetCard key={p.id} preset={p} active={theme.id === p.id} onSelect={() => pickTheme(p)} />
           ))}
         </div>
       </section>
@@ -163,6 +165,11 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
             </Select.Content>
           </Select.Portal>
         </Select.Root>
+        <div className="mt-3 flex items-center gap-3">
+          <span className="w-10 shrink-0 text-xs text-zinc-700 dark:text-zinc-300">Size</span>
+          <Slider label="Font size" value={theme.fontSize} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
+          <PxField label="Font size in pixels" value={theme.fontSize} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
+        </div>
       </section>
 
       <section>
