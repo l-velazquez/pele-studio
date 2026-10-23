@@ -1,17 +1,18 @@
 import { cn } from './lib/cn'
-import { AlertTriangle, Code2, Download, Eye, FileUp, LayoutTemplate, Palette } from 'lucide-react'
+import { AlertTriangle, Code2, Download, Eye, EyeOff, FileUp, LayoutTemplate, Palette } from 'lucide-react'
 import { forgetTextWidths } from 'pele'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { DiagramEditor } from './components/DiagramEditor'
 import { DiagramPreview, type PreviewDiagram } from './components/DiagramPreview'
 import { ExportDialog } from './components/ExportDialog'
 import { MobileMenu } from './components/MobileMenu'
+import { PeekSplit } from './components/PeekSplit'
 import { TemplateGallery } from './components/TemplateGallery'
 import { ThemePanel } from './components/ThemePanel'
 import { AppearanceMenu, Button, Tip, TooltipProvider } from './components/ui'
 import { useAppearance } from './lib/appearance'
 import { backgroundColor, type ExportOptions } from './lib/export'
-import { useFitsOnePanel, useIsMobile } from './lib/media'
+import { useCodePeek, useFitsOnePanel, useIsMobile } from './lib/media'
 import { renderDiagram, renderKeepingSize } from './lib/pele'
 import { extractMermaid, loadDoc, saveDoc } from './lib/storage'
 import { DEFAULT_SOURCE } from './templates'
@@ -59,6 +60,7 @@ export default function App() {
   const isMobile = useIsMobile()
   const [mobileTab, setMobileTab] = useState<MobileTab>('preview')
   const onePanel = useFitsOnePanel()
+  const [peek, setPeek] = useCodePeek()
 
   // Switching between the phone and desktop layouts (e.g. rotating a phone) changes the canvas
   // shape entirely, so re-fit rather than keep a pan/zoom chosen for the other layout.
@@ -281,9 +283,42 @@ export default function App() {
             >
               <div className="flex h-9 shrink-0 items-center justify-between border-b border-zinc-100 dark:border-zinc-800 px-4">
                 <span className="text-[11px] font-semibold tracking-wider text-zinc-500 dark:text-zinc-400 uppercase">Mermaid</span>
-                {outcome?.ok && <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500 dark:text-zinc-400">{outcome.result.type}</span>}
+                <div className="flex items-center gap-1.5">
+                  {outcome?.ok && <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500 dark:text-zinc-400">{outcome.result.type}</span>}
+                  {isMobile && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="-mr-2 size-8"
+                      onClick={() => setPeek({ ...peek, open: !peek.open })}
+                      aria-label={peek.open ? 'Hide preview' : 'Show preview'}
+                      aria-pressed={peek.open}
+                    >
+                      {peek.open ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="min-h-0 flex-1">{loaded && <DiagramEditor value={source} onChange={setSource} error={error} />}</div>
+              <PeekSplit
+                // Mounted only while the Code tab is visible: a hidden (zero-size) preview can't fit itself.
+                open={isMobile && peek.open && mobileTab === 'code'}
+                size={peek.size}
+                onSizeChange={(size) => setPeek({ ...peek, size })}
+                preview={
+                  <DiagramPreview
+                    compact
+                    diagram={diagram}
+                    error={error}
+                    vars={vars}
+                    padding={exportOptions.padding}
+                    background={background}
+                    fitKey={fitKey}
+                    emptyHint="Your diagram appears here"
+                  />
+                }
+              >
+                {loaded && <DiagramEditor value={source} onChange={setSource} error={error} />}
+              </PeekSplit>
               {isMobile && error && (
                 <div role="alert" className="flex shrink-0 items-start gap-2 border-t border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 px-4 py-2 text-xs text-red-700 dark:text-red-300">
                   <AlertTriangle className="mt-px size-3.5 shrink-0" />

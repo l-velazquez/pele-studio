@@ -29,6 +29,7 @@ export function DiagramPreview({
   background,
   fitKey,
   emptyHint = 'Start typing Mermaid on the left',
+  compact = false,
 }: {
   diagram: PreviewDiagram | null
   error: DiagramError | null
@@ -39,6 +40,8 @@ export function DiagramPreview({
   /** Changing this re-fits the view (new template, import). */
   fitKey: number
   emptyHint?: string
+  /** Secondary inline preview (above the mobile code editor): tighter fit, compact controls, no error card or keyboard shortcuts. */
+  compact?: boolean
 }) {
   const viewport = useRef<HTMLDivElement>(null)
   const [view, setView] = useState<View>({ scale: 1, x: 0, y: 0 })
@@ -56,10 +59,10 @@ export function DiagramPreview({
     if (!el || !boardW) return
     const { left, width, height } = el.getBoundingClientRect()
     anchorLeft.current = left
-    const margin = Math.min(48, width * 0.06)
+    const margin = Math.min(compact ? 16 : 48, width * 0.06)
     const scale = clamp(Math.min((width - margin * 2) / boardW, (height - margin * 2) / boardH, 1.5))
     setView({ scale, x: (width - boardW * scale) / 2, y: (height - boardH * scale) / 2 })
-  }, [boardW, boardH])
+  }, [boardW, boardH, compact])
 
   // Fit on first diagram and whenever the caller asks; otherwise keep the user's view while typing.
   useLayoutEffect(() => {
@@ -125,6 +128,7 @@ export function DiagramPreview({
   }, [zoomAt])
 
   useEffect(() => {
+    if (compact) return
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement
       if (target.closest('.cm-editor, input, textarea, [role=dialog]')) return
@@ -134,7 +138,7 @@ export function DiagramPreview({
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [fit, zoomAt])
+  }, [fit, zoomAt, compact])
 
   const boardStyle: CSSProperties = {
     ...(vars as CSSProperties),
@@ -191,11 +195,11 @@ export function DiagramPreview({
             dangerouslySetInnerHTML={{ __html: diagram.svg }}
           />
         ) : (
-          !error && <div className="absolute inset-0 grid place-items-center text-sm text-zinc-400 dark:text-zinc-500">{emptyHint}</div>
+          !error && <div className={cn('absolute inset-0 grid place-items-center text-zinc-400 dark:text-zinc-500', compact ? 'text-xs' : 'text-sm')}>{emptyHint}</div>
         )}
       </div>
 
-      {error && (
+      {error && !compact && (
         <div
           role="alert"
           className="absolute right-4 bottom-4 left-4 mx-auto flex max-w-xl gap-3 rounded-xl border border-red-200 dark:border-red-900 bg-white/95 dark:bg-zinc-900/95 p-3 text-[13px] shadow-lg backdrop-blur"
@@ -212,26 +216,33 @@ export function DiagramPreview({
         </div>
       )}
 
-      <div className="absolute top-3 right-3 flex items-center gap-0.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 p-1 shadow-sm backdrop-blur">
+      <div
+        className={cn(
+          'absolute flex items-center gap-0.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 p-1 shadow-sm backdrop-blur',
+          compact ? 'top-2 right-2' : 'top-3 right-3',
+        )}
+      >
         <Tip label="Zoom out (−)">
           <Button variant="ghost" size="icon" className="size-7 pointer-coarse:size-9" onClick={() => zoomAt(1 / 1.2)} aria-label="Zoom out">
             <Minus className="size-3.5 pointer-coarse:size-4" />
           </Button>
         </Tip>
-        <button
-          type="button"
-          className="w-12 rounded-md text-center text-xs font-medium text-zinc-600 dark:text-zinc-400 tabular-nums hover:bg-zinc-100 dark:hover:bg-zinc-800"
-          onClick={() => zoomAt(1 / view.scale)}
-          title="Reset to 100%"
-        >
-          {Math.round(view.scale * 100)}%
-        </button>
+        {!compact && (
+          <button
+            type="button"
+            className="w-12 rounded-md text-center text-xs font-medium text-zinc-600 dark:text-zinc-400 tabular-nums hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            onClick={() => zoomAt(1 / view.scale)}
+            title="Reset to 100%"
+          >
+            {Math.round(view.scale * 100)}%
+          </button>
+        )}
         <Tip label="Zoom in (+)">
           <Button variant="ghost" size="icon" className="size-7 pointer-coarse:size-9" onClick={() => zoomAt(1.2)} aria-label="Zoom in">
             <Plus className="size-3.5 pointer-coarse:size-4" />
           </Button>
         </Tip>
-        <div className="mx-0.5 h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
+        {!compact && <div className="mx-0.5 h-4 w-px bg-zinc-200 dark:bg-zinc-700" />}
         <Tip label="Fit to screen (Shift+1)">
           <Button variant="ghost" size="icon" className="size-7 pointer-coarse:size-9" onClick={fit} aria-label="Fit to screen">
             <Maximize className="size-3.5 pointer-coarse:size-4" />
