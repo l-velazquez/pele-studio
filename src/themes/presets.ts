@@ -10,6 +10,7 @@ export const PRESETS: Theme[] = [
     font: 'plex',
     radius: 4,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'paper',
@@ -20,6 +21,7 @@ export const PRESETS: Theme[] = [
     font: 'inter',
     radius: 6,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'midnight',
@@ -30,6 +32,7 @@ export const PRESETS: Theme[] = [
     font: 'inter',
     radius: 8,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'nord',
@@ -40,6 +43,7 @@ export const PRESETS: Theme[] = [
     font: 'plex',
     radius: 6,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'pastel',
@@ -50,6 +54,7 @@ export const PRESETS: Theme[] = [
     font: 'grotesk',
     radius: 14,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'forest',
@@ -60,6 +65,7 @@ export const PRESETS: Theme[] = [
     font: 'serif',
     radius: 4,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'terminal',
@@ -70,6 +76,7 @@ export const PRESETS: Theme[] = [
     font: 'mono',
     radius: 0,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'sunset',
@@ -80,6 +87,7 @@ export const PRESETS: Theme[] = [
     font: 'grotesk',
     radius: 10,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'blueprint',
@@ -90,6 +98,7 @@ export const PRESETS: Theme[] = [
     font: 'mono',
     radius: 0,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'mono',
@@ -100,6 +109,7 @@ export const PRESETS: Theme[] = [
     font: 'inter',
     radius: 0,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'sketch',
@@ -110,6 +120,7 @@ export const PRESETS: Theme[] = [
     font: 'hand',
     radius: 10,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'dracula',
@@ -120,6 +131,7 @@ export const PRESETS: Theme[] = [
     font: 'mono',
     radius: 6,
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
 ]
 

@@ -1,5 +1,5 @@
 import { Check, Monitor, Moon, Sun, X } from 'lucide-react'
-import { Dialog as D, DropdownMenu as DM, Slider as S, ToggleGroup as TG, Tooltip as T } from 'radix-ui'
+import { Dialog as D, DropdownMenu as DM, Slider as S, Switch as SW, ToggleGroup as TG, Tooltip as T } from 'radix-ui'
 import { useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import type { Appearance } from '../lib/appearance'
 import { cn } from '../lib/cn'
@@ -97,6 +97,7 @@ export function Slider({
   max,
   step = 1,
   label,
+  mark,
 }: {
   value: number
   onChange: (v: number) => void
@@ -104,7 +105,10 @@ export function Slider({
   max: number
   step?: number
   label: string
+  /** Draws a tick on the track at this value, e.g. to show the default. */
+  mark?: number
 }) {
+  const markPercent = mark === undefined ? null : ((mark - min) / (max - min)) * 100
   return (
     <S.Root
       className="relative flex h-5 w-full touch-none items-center select-none"
@@ -117,11 +121,35 @@ export function Slider({
       <S.Track className="relative h-1 grow rounded-full bg-zinc-200 dark:bg-zinc-700">
         <S.Range className="absolute h-full rounded-full bg-zinc-900 dark:bg-zinc-100" />
       </S.Track>
+      {markPercent !== null && (
+        <span
+          aria-hidden
+          title={`Default: ${mark}`}
+          className="absolute h-2.5 w-0.5 -translate-x-1/2 rounded-full bg-zinc-400 dark:bg-zinc-500"
+          // Mirrors Radix's in-bounds thumb offset (half the 16px thumb) so the tick sits under the thumb at `mark`.
+          style={{ left: `calc(${markPercent}% + ${8 * (1 - markPercent / 50)}px)` }}
+        />
+      )}
       <S.Thumb
         aria-label={label}
         className="block size-4 rounded-full border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 shadow focus-visible:outline-2 focus-visible:outline-indigo-500"
       />
     </S.Root>
+  )
+}
+
+export function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-3">
+      <span className="text-xs text-zinc-700 dark:text-zinc-300">{label}</span>
+      <SW.Root
+        checked={checked}
+        onCheckedChange={onChange}
+        className="relative h-4.5 w-8 shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 data-[state=checked]:bg-zinc-900 dark:data-[state=checked]:bg-zinc-100"
+      >
+        <SW.Thumb className="block size-3.5 translate-x-0.5 rounded-full bg-white dark:bg-zinc-900 shadow transition-transform data-[state=checked]:translate-x-4" />
+      </SW.Root>
+    </label>
   )
 }
 

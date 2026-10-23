@@ -4,8 +4,8 @@ import { Select } from 'radix-ui'
 import { FONT_CATEGORIES, FONTS, getFont } from '../themes/fonts'
 import { PRESETS } from '../themes/presets'
 import { randomTheme } from '../themes/random'
-import { COLOR_LABELS, FONT_SIZE_RANGE, type ColorKey, type Theme } from '../themes/types'
-import { Button, PxField, SectionLabel, Slider, Tip } from './ui'
+import { COLOR_LABELS, DEFAULT_FONT_SIZE, FONT_SIZE_RANGE, type ColorKey, type Theme } from '../themes/types'
+import { Button, PxField, SectionLabel, Slider, Tip, Toggle } from './ui'
 
 function PresetCard({ preset, active, onSelect }: { preset: Theme; active: boolean; onSelect: () => void }) {
   const c = preset.colors
@@ -71,12 +71,59 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
   const modified = base ? JSON.stringify(base) !== JSON.stringify(theme) : false
 
   const setColor = (key: ColorKey, value: string) => onChange({ ...theme, colors: { ...theme.colors, [key]: value } })
-  // Font size is a reading preference more than a palette choice, so it carries across theme switches.
-  const pickTheme = (t: Theme) => onChange({ ...t, fontSize: theme.fontSize })
+  // Text sizing is a reading preference more than a palette choice, so it carries across theme switches.
+  const pickTheme = (t: Theme) => onChange({ ...t, fontSize: theme.fontSize, keepSize: theme.keepSize })
   const setSeries = (i: number, value: string) => onChange({ ...theme, series: theme.series.map((c, j) => (j === i ? value : c)) })
 
   return (
     <div className="flex flex-col gap-6 p-4">
+      <section>
+        <SectionLabel>Typography</SectionLabel>
+        <Select.Root value={theme.font} onValueChange={(font) => onChange({ ...theme, font })}>
+          <Select.Trigger
+            aria-label="Font"
+            className="flex h-9 w-full items-center justify-between rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 text-[13px] shadow-xs hover:bg-zinc-50 dark:hover:bg-zinc-800"
+            style={{ fontFamily: getFont(theme.font).stack }}
+          >
+            <Select.Value />
+            <Select.Icon className="text-zinc-400 dark:text-zinc-500">▾</Select.Icon>
+          </Select.Trigger>
+          <Select.Portal>
+            <Select.Content position="popper" sideOffset={4} className="z-50 w-(--radix-select-trigger-width) rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-1 shadow-xl">
+              <Select.Viewport className="max-h-[min(24rem,var(--radix-select-content-available-height))]">
+                {FONT_CATEGORIES.map((cat, ci) => (
+                  <Select.Group key={cat.id}>
+                    {ci > 0 && <Select.Separator className="mx-1 my-1 h-px bg-zinc-100 dark:bg-zinc-800" />}
+                    <Select.Label className="px-2.5 pt-1.5 pb-1 text-[10px] font-medium tracking-wide text-zinc-400 dark:text-zinc-500 uppercase">{cat.label}</Select.Label>
+                    {FONTS.filter((f) => f.category === cat.id).map((f) => (
+                      <Select.Item
+                        key={f.id}
+                        value={f.id}
+                        className="flex cursor-default items-center justify-between rounded-md px-2.5 py-1.5 text-[13px] outline-none data-highlighted:bg-zinc-100 dark:data-highlighted:bg-zinc-800"
+                        style={{ fontFamily: f.stack }}
+                      >
+                        <Select.ItemText>{f.label}</Select.ItemText>
+                        <Select.ItemIndicator>
+                          <Check className="size-3.5" />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    ))}
+                  </Select.Group>
+                ))}
+              </Select.Viewport>
+            </Select.Content>
+          </Select.Portal>
+        </Select.Root>
+        <div className="mt-3 flex items-center gap-3">
+          <span className="w-10 shrink-0 text-xs text-zinc-700 dark:text-zinc-300">Size</span>
+          <Slider label="Font size" value={theme.fontSize} mark={DEFAULT_FONT_SIZE} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
+          <PxField label="Font size in pixels" value={theme.fontSize} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
+        </div>
+        <div className="mt-3">
+          <Toggle label="Keep diagram size" checked={theme.keepSize} onChange={(keepSize) => onChange({ ...theme, keepSize })} />
+        </div>
+      </section>
+
       <section>
         <SectionLabel
           action={
@@ -125,50 +172,6 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
               </span>
             </Tip>
           ))}
-        </div>
-      </section>
-
-      <section>
-        <SectionLabel>Typography</SectionLabel>
-        <Select.Root value={theme.font} onValueChange={(font) => onChange({ ...theme, font })}>
-          <Select.Trigger
-            aria-label="Font"
-            className="flex h-9 w-full items-center justify-between rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 text-[13px] shadow-xs hover:bg-zinc-50 dark:hover:bg-zinc-800"
-            style={{ fontFamily: getFont(theme.font).stack }}
-          >
-            <Select.Value />
-            <Select.Icon className="text-zinc-400 dark:text-zinc-500">▾</Select.Icon>
-          </Select.Trigger>
-          <Select.Portal>
-            <Select.Content position="popper" sideOffset={4} className="z-50 w-(--radix-select-trigger-width) rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-1 shadow-xl">
-              <Select.Viewport className="max-h-[min(24rem,var(--radix-select-content-available-height))]">
-                {FONT_CATEGORIES.map((cat, ci) => (
-                  <Select.Group key={cat.id}>
-                    {ci > 0 && <Select.Separator className="mx-1 my-1 h-px bg-zinc-100 dark:bg-zinc-800" />}
-                    <Select.Label className="px-2.5 pt-1.5 pb-1 text-[10px] font-medium tracking-wide text-zinc-400 dark:text-zinc-500 uppercase">{cat.label}</Select.Label>
-                    {FONTS.filter((f) => f.category === cat.id).map((f) => (
-                      <Select.Item
-                        key={f.id}
-                        value={f.id}
-                        className="flex cursor-default items-center justify-between rounded-md px-2.5 py-1.5 text-[13px] outline-none data-highlighted:bg-zinc-100 dark:data-highlighted:bg-zinc-800"
-                        style={{ fontFamily: f.stack }}
-                      >
-                        <Select.ItemText>{f.label}</Select.ItemText>
-                        <Select.ItemIndicator>
-                          <Check className="size-3.5" />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                    ))}
-                  </Select.Group>
-                ))}
-              </Select.Viewport>
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-        <div className="mt-3 flex items-center gap-3">
-          <span className="w-10 shrink-0 text-xs text-zinc-700 dark:text-zinc-300">Size</span>
-          <Slider label="Font size" value={theme.fontSize} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
-          <PxField label="Font size in pixels" value={theme.fontSize} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
         </div>
       </section>
 

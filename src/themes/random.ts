@@ -61,5 +61,6 @@ export function randomTheme(): Theme {
     font: fonts[Math.floor(Math.random() * fonts.length)].id,
     radius: [0, 4, 6, 8, 12, 16][Math.floor(Math.random() * 6)],
     fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   }
 }

@@ -1,7 +1,7 @@
 import { forgetTextWidths } from 'pele'
 import { ensureFontLoaded, fontDataUrl, getFont, MONO_STACK } from '../themes/fonts'
 import { themeToVars, type Theme } from '../themes/types'
-import { renderDiagram } from './pele'
+import { renderDiagram, renderKeepingSize } from './pele'
 import { resolveSvg } from './resolve-svg'
 
 export type BackgroundMode = 'theme' | 'transparent' | 'custom'
@@ -85,7 +85,8 @@ export async function buildExportSvg(source: string, theme: Theme, opts: ExportO
   const font = getFont(theme.font)
   await ensureFontLoaded(font)
   forgetTextWidths()
-  const outcome = renderDiagram(source, { fontFamily: font.stack, fontFamilyMono: MONO_STACK, fontSize: theme.fontSize })
+  const render = theme.keepSize ? renderKeepingSize : renderDiagram
+  const outcome = render(source, { fontFamily: font.stack, fontFamilyMono: MONO_STACK, fontSize: theme.fontSize })
   if (!outcome.ok) throw new Error(outcome.error.message)
 
   const vars = themeToVars(theme, font.stack, MONO_STACK)
