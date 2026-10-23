@@ -1,4 +1,4 @@
-import type { Theme } from './types'
+import { DEFAULT_FONT_SIZE, type Theme } from './types'
 
 export const PRESETS: Theme[] = [
   {
@@ -9,6 +9,8 @@ export const PRESETS: Theme[] = [
     series: ['#0b5cd5', '#00a3a3', '#f59f00', '#5c6ac4', '#e8590c', '#2b8a3e', '#c2255c', '#495057'],
     font: 'plex',
     radius: 4,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'paper',
@@ -18,6 +20,8 @@ export const PRESETS: Theme[] = [
     series: ['#205ea6', '#bc5215', '#66800b', '#a02f6f', '#24837b', '#ad8301', '#5e409d', '#af3029'],
     font: 'inter',
     radius: 6,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'midnight',
@@ -27,6 +31,8 @@ export const PRESETS: Theme[] = [
     series: ['#7c9cff', '#ff8fb1', '#5ee1c4', '#ffd166', '#b693ff', '#4cc9f0', '#ff9f68', '#9be15d'],
     font: 'inter',
     radius: 8,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'nord',
@@ -36,6 +42,8 @@ export const PRESETS: Theme[] = [
     series: ['#88c0d0', '#bf616a', '#a3be8c', '#ebcb8b', '#b48ead', '#81a1c1', '#d08770', '#8fbcbb'],
     font: 'plex',
     radius: 6,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'pastel',
@@ -45,6 +53,8 @@ export const PRESETS: Theme[] = [
     series: ['#c4b5fd', '#fbcfe8', '#a7f3d0', '#fde68a', '#bae6fd', '#fecaca', '#d9f99d', '#fed7aa'],
     font: 'grotesk',
     radius: 14,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'forest',
@@ -54,6 +64,8 @@ export const PRESETS: Theme[] = [
     series: ['#2f6b3a', '#a0522d', '#6b8e23', '#c19a3b', '#4f7c8a', '#8b5a7c', '#b8860b', '#556b2f'],
     font: 'serif',
     radius: 4,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'terminal',
@@ -63,6 +75,8 @@ export const PRESETS: Theme[] = [
     series: ['#39d353', '#f7c548', '#4cc9f0', '#ff6b6b', '#c77dff', '#80ffdb', '#ffa94d', '#e9ecef'],
     font: 'mono',
     radius: 0,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'sunset',
@@ -72,6 +86,8 @@ export const PRESETS: Theme[] = [
     series: ['#ff7a59', '#ffc15e', '#f25f8b', '#b86bff', '#5ec2ff', '#ffe08a', '#ff9eb5', '#8de0b0'],
     font: 'grotesk',
     radius: 10,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'blueprint',
@@ -81,6 +97,8 @@ export const PRESETS: Theme[] = [
     series: ['#eaf2ff', '#ffd166', '#80ffdb', '#ff8fa3', '#b8c0ff', '#a0e7e5', '#ffc6a5', '#caffbf'],
     font: 'mono',
     radius: 0,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'mono',
@@ -90,6 +108,8 @@ export const PRESETS: Theme[] = [
     series: ['#111111', '#444444', '#777777', '#999999', '#bbbbbb', '#dddddd', '#2b2b2b', '#5a5a5a'],
     font: 'inter',
     radius: 0,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'sketch',
@@ -99,6 +119,8 @@ export const PRESETS: Theme[] = [
     series: ['#ffd43b', '#74c0fc', '#ff8787', '#8ce99a', '#da77f2', '#ffa94d', '#63e6be', '#adb5bd'],
     font: 'hand',
     radius: 10,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
   {
     id: 'dracula',
@@ -108,6 +130,8 @@ export const PRESETS: Theme[] = [
     series: ['#bd93f9', '#ff79c6', '#50fa7b', '#f1fa8c', '#8be9fd', '#ffb86c', '#ff5555', '#6272a4'],
     font: 'mono',
     radius: 6,
+    fontSize: DEFAULT_FONT_SIZE,
+    keepSize: true,
   },
 ]
 

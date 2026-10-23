@@ -20,7 +20,14 @@ export interface Theme {
   series: string[]
   font: string
   radius: number
+  /** Base text size in px; affects layout, so it is passed to render() rather than set as a CSS variable. */
+  fontSize: number
+  /** Scale the diagram back to its default-size footprint so only the text appears larger. */
+  keepSize: boolean
 }
+
+export const DEFAULT_FONT_SIZE = 16
+export const FONT_SIZE_RANGE = { min: 10, max: 32 }
 
 export const COLOR_LABELS: Record<ColorKey, string> = {
   bg: 'Background',

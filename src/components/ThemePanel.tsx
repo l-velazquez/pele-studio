@@ -4,8 +4,8 @@ import { Select } from 'radix-ui'
 import { FONT_CATEGORIES, FONTS, getFont } from '../themes/fonts'
 import { PRESETS } from '../themes/presets'
 import { randomTheme } from '../themes/random'
-import { COLOR_LABELS, type ColorKey, type Theme } from '../themes/types'
-import { Button, SectionLabel, Slider, Tip } from './ui'
+import { COLOR_LABELS, DEFAULT_FONT_SIZE, FONT_SIZE_RANGE, type ColorKey, type Theme } from '../themes/types'
+import { Button, PxField, SectionLabel, Slider, Tip, Toggle } from './ui'
 
 function PresetCard({ preset, active, onSelect }: { preset: Theme; active: boolean; onSelect: () => void }) {
   const c = preset.colors
@@ -71,61 +71,12 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
   const modified = base ? JSON.stringify(base) !== JSON.stringify(theme) : false
 
   const setColor = (key: ColorKey, value: string) => onChange({ ...theme, colors: { ...theme.colors, [key]: value } })
+  // Text sizing is a reading preference more than a palette choice, so it carries across theme switches.
+  const pickTheme = (t: Theme) => onChange({ ...t, fontSize: theme.fontSize, keepSize: theme.keepSize })
   const setSeries = (i: number, value: string) => onChange({ ...theme, series: theme.series.map((c, j) => (j === i ? value : c)) })
 
   return (
     <div className="flex flex-col gap-6 p-4">
-      <section>
-        <SectionLabel
-          action={
-            <Tip label="Generate a coordinated palette">
-              <Button size="sm" variant="ghost" onClick={() => onChange(randomTheme())} className="-mr-1.5">
-                <Shuffle className="size-3.5" /> Surprise me
-              </Button>
-            </Tip>
-          }
-        >
-          Theme
-        </SectionLabel>
-        <div className="grid grid-cols-2 gap-2">
-          {PRESETS.map((p) => (
-            <PresetCard key={p.id} preset={p} active={theme.id === p.id} onSelect={() => onChange(p)} />
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <SectionLabel
-          action={
-            modified && base ? (
-              <Button size="sm" variant="ghost" onClick={() => onChange(base)} className="-mr-1.5">
-                <RotateCcw className="size-3.5" /> Reset
-              </Button>
-            ) : undefined
-          }
-        >
-          Colors
-        </SectionLabel>
-        <div className="grid grid-cols-1 gap-0.5">
-          {(Object.keys(COLOR_LABELS) as ColorKey[]).map((k) => (
-            <ColorField key={k} label={COLOR_LABELS[k]} value={theme.colors[k]} onChange={(v) => setColor(k, v)} />
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <SectionLabel>Chart series</SectionLabel>
-        <div className="grid grid-cols-8 gap-1.5">
-          {theme.series.map((c, i) => (
-            <Tip key={i} label={`Series ${i + 1} · ${c}`}>
-              <span className="relative aspect-square overflow-hidden rounded-md ring-1 ring-zinc-900/10 dark:ring-white/10">
-                <input type="color" value={c} onChange={(e) => setSeries(i, e.target.value)} className="absolute -inset-1 size-[calc(100%+8px)]" aria-label={`Series color ${i + 1}`} />
-              </span>
-            </Tip>
-          ))}
-        </div>
-      </section>
-
       <section>
         <SectionLabel>Typography</SectionLabel>
         <Select.Root value={theme.font} onValueChange={(font) => onChange({ ...theme, font })}>
@@ -163,6 +114,65 @@ export function ThemePanel({ theme, onChange }: { theme: Theme; onChange: (t: Th
             </Select.Content>
           </Select.Portal>
         </Select.Root>
+        <div className="mt-3 flex items-center gap-3">
+          <span className="w-10 shrink-0 text-xs text-zinc-700 dark:text-zinc-300">Size</span>
+          <Slider label="Font size" value={theme.fontSize} mark={DEFAULT_FONT_SIZE} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
+          <PxField label="Font size in pixels" value={theme.fontSize} {...FONT_SIZE_RANGE} onChange={(fontSize) => onChange({ ...theme, fontSize })} />
+        </div>
+        <div className="mt-3">
+          <Toggle label="Keep diagram size" checked={theme.keepSize} onChange={(keepSize) => onChange({ ...theme, keepSize })} />
+        </div>
+      </section>
+
+      <section>
+        <SectionLabel
+          action={
+            <Tip label="Generate a coordinated palette">
+              <Button size="sm" variant="ghost" onClick={() => pickTheme(randomTheme())} className="-mr-1.5">
+                <Shuffle className="size-3.5" /> Surprise me
+              </Button>
+            </Tip>
+          }
+        >
+          Theme
+        </SectionLabel>
+        <div className="grid grid-cols-2 gap-2">
+          {PRESETS.map((p) => (
+            <PresetCard key={p.id} preset={p} active={theme.id === p.id} onSelect={() => pickTheme(p)} />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <SectionLabel
+          action={
+            modified && base ? (
+              <Button size="sm" variant="ghost" onClick={() => onChange(base)} className="-mr-1.5">
+                <RotateCcw className="size-3.5" /> Reset
+              </Button>
+            ) : undefined
+          }
+        >
+          Colors
+        </SectionLabel>
+        <div className="grid grid-cols-1 gap-0.5">
+          {(Object.keys(COLOR_LABELS) as ColorKey[]).map((k) => (
+            <ColorField key={k} label={COLOR_LABELS[k]} value={theme.colors[k]} onChange={(v) => setColor(k, v)} />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <SectionLabel>Chart series</SectionLabel>
+        <div className="grid grid-cols-8 gap-1.5">
+          {theme.series.map((c, i) => (
+            <Tip key={i} label={`Series ${i + 1} · ${c}`}>
+              <span className="relative aspect-square overflow-hidden rounded-md ring-1 ring-zinc-900/10 dark:ring-white/10">
+                <input type="color" value={c} onChange={(e) => setSeries(i, e.target.value)} className="absolute -inset-1 size-[calc(100%+8px)]" aria-label={`Series color ${i + 1}`} />
+              </span>
+            </Tip>
+          ))}
+        </div>
       </section>
 
       <section>

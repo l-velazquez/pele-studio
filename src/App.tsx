@@ -10,12 +10,12 @@ import { ThemePanel } from './components/ThemePanel'
 import { AppearanceMenu, Button, Tip, TooltipProvider } from './components/ui'
 import { useAppearance } from './lib/appearance'
 import { backgroundColor, type ExportOptions } from './lib/export'
-import { renderDiagram } from './lib/pele'
+import { renderDiagram, renderKeepingSize } from './lib/pele'
 import { extractMermaid, loadDoc, saveDoc } from './lib/storage'
 import { DEFAULT_SOURCE } from './templates'
 import { ensureFontLoaded, getFont, MONO_STACK } from './themes/fonts'
 import { DEFAULT_THEME } from './themes/presets'
-import { themeToVars, type Theme } from './themes/types'
+import { DEFAULT_FONT_SIZE, themeToVars, type Theme } from './themes/types'
 import logoUrl from '../assets/icon.svg'
 import logoDarkUrl from '../assets/icon-dark.svg'
 
@@ -57,7 +57,8 @@ export default function App() {
         pendingFit.current = doc.source
         setTitle(doc.title)
         setSource(doc.source)
-        setTheme(doc.theme)
+        // Docs saved before font size existed lack these fields.
+        setTheme({ ...doc.theme, fontSize: doc.theme.fontSize ?? DEFAULT_FONT_SIZE, keepSize: doc.theme.keepSize ?? true })
         setExportOptions({ ...DEFAULT_EXPORT, ...doc.exportOptions })
       }
       setLoaded(true)
@@ -86,10 +87,14 @@ export default function App() {
 
   const renderSource = useDebounced(source, 80)
   const outcome = useMemo(
-    () => (fontVersion > 0 ? renderDiagram(renderSource, { fontFamily: font.stack, fontFamilyMono: MONO_STACK }) : null),
+    () => {
+      if (fontVersion === 0) return null
+      const render = theme.keepSize ? renderKeepingSize : renderDiagram
+      return render(renderSource, { fontFamily: font.stack, fontFamilyMono: MONO_STACK, fontSize: theme.fontSize })
+    },
     // fontVersion invalidates cached measurements after a font finishes loading.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [renderSource, font.stack, fontVersion],
+    [renderSource, font.stack, theme.fontSize, theme.keepSize, fontVersion],
   )
 
   const lastGood = useRef<PreviewDiagram | null>(null)
