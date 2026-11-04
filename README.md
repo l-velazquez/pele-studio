@@ -68,7 +68,7 @@ src/
 
 
 ## Disclaimer
-This happen was created using the assistance of artificial intelligence. 
+This app was created using the assistance of artificial intelligence. 
 
 ## License
 
