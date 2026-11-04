@@ -1,5 +1,5 @@
 import { cn } from './lib/cn'
-import { AlertTriangle, Code2, Download, Eye, EyeOff, FileUp, LayoutTemplate, Palette } from 'lucide-react'
+import { AlertTriangle, BookOpen, Code2, Download, Eye, EyeOff, FileUp, LayoutTemplate, Palette } from 'lucide-react'
 import { forgetTextWidths } from 'pele'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { DiagramEditor } from './components/DiagramEditor'
@@ -219,6 +219,17 @@ export default function App() {
           ) : (
             <>
               <div className="flex-1" />
+              <Tip label="About Pele Studio and diagram guides">
+                <a
+                  href={`${import.meta.env.BASE_URL}about/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="About Pele Studio and diagram guides (opens in a new tab)"
+                  className="inline-flex size-8 items-center justify-center rounded-lg text-zinc-600 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                >
+                  <BookOpen className="size-4" aria-hidden />
+                </a>
+              </Tip>
               <Tip label="View source on GitHub">
                 <a
                   href={REPO_URL}

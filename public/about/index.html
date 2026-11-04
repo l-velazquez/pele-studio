@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>About Pele Studio — A browser-based Mermaid diagram editor</title>
+    <meta name="description" content="Write Mermaid source, preview diagrams live, customize themes and fonts, and export PNG or SVG with Pele Studio. Autosave stays in your browser.">
+    <link rel="canonical" href="https://pele-studio.cc/about/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/guides/guides.css">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Pele Studio">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="About Pele Studio — A browser-based Mermaid diagram editor">
+    <meta property="og:description" content="Write Mermaid source, preview diagrams live, customize themes and fonts, and export PNG or SVG. Autosave stays in your browser.">
+    <meta property="og:url" content="https://pele-studio.cc/about/">
+    <meta property="og:image" content="https://pele-studio.cc/social-preview.png">
+    <meta property="og:image:secure_url" content="https://pele-studio.cc/social-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pele Studio — Mermaid diagram editor">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Pele Studio — A browser-based Mermaid diagram editor">
+    <meta name="twitter:description" content="Write Mermaid source, preview diagrams live, customize themes and fonts, and export PNG or SVG. Autosave stays in your browser.">
+    <meta name="twitter:image" content="https://pele-studio.cc/social-preview.png">
+    <meta name="twitter:image:alt" content="Pele Studio — Mermaid diagram editor">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Pele Studio editor">
+          <img src="/favicon.svg" width="28" height="28" alt="">
+          <span>Pele Studio</span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href="/">Editor</a>
+          <a href="/about/" aria-current="page">About</a>
+          <a href="/guides/mermaid-to-png/">Export guide</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell" tabindex="-1">
+      <section class="hero" aria-labelledby="about-title">
+        <p class="eyebrow">About Pele Studio</p>
+        <h1 id="about-title">Create beautiful Mermaid diagrams in your browser</h1>
+        <p class="lead">From a few lines of text to a diagram you can use. Write Mermaid source, see a live preview, shape its appearance, and export it as PNG or SVG.</p>
+        <div class="actions">
+          <a class="button button-primary" href="/">Open the editor <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="/guides/mermaid-to-png/">Read the export guide</a>
+        </div>
+      </section>
+
+      <ol class="workflow" aria-label="The diagram workflow">
+        <li><span class="step-number">01</span><strong>Write</strong><span>Mermaid source</span></li>
+        <li><span class="step-number">02</span><strong>Preview</strong><span>See changes live</span></li>
+        <li><span class="step-number">03</span><strong>Customize</strong><span>Colors and typography</span></li>
+        <li><span class="step-number">04</span><strong>Export</strong><span>PNG or SVG</span></li>
+      </ol>
+
+      <div class="about-grid">
+        <section class="text-section" aria-labelledby="source-title">
+          <h2 id="source-title">Text in. Diagram out.</h2>
+          <p>Mermaid describes diagrams using text: nodes, connections, labels, and layout directions. Pele Studio pairs a source editor with a live preview so you can work on the structure without drawing every shape by hand.</p>
+          <p>Start by typing, choose a starter diagram from <strong>Templates</strong>, or import a <code>.mmd</code> file or Markdown containing a Mermaid code block. Syntax highlighting and inline errors help you spot problems. While you fix an error, the preview keeps the last valid diagram on screen; it is not confirmation that the current source is valid.</p>
+          <p>Pan and zoom to inspect the result, then use the design controls to refine it. On a phone, the <strong>Code</strong>, <strong>Preview</strong>, and <strong>Design</strong> tabs keep these tools within reach.</p>
+        </section>
+
+        <section class="text-section" aria-labelledby="design-title">
+          <h2 id="design-title">Make the diagram fit its destination</h2>
+          <p>Choose a light or dark theme, try <strong>Surprise me</strong> for a coordinated palette, or adjust individual colors. Typography controls include bundled and system fonts, font size, and a setting to keep the diagram size while changing text size. Corner radius and chart-series colors offer further control.</p>
+          <p>Export options are separate from preview zoom. Choose PNG for a raster image or SVG for a vector file, then set the background and padding. PNG resolution choices run from 1× to 4×, with automatic reduction for large diagrams to stay within browser canvas limits.</p>
+          <p>For transparent exports, select <strong>None</strong> under <strong>Background</strong>. For presentation software, check font support before choosing SVG. The <a href="/guides/mermaid-to-png/">Mermaid-to-PNG and SVG guide</a> walks through both formats and their trade-offs.</p>
+        </section>
+      </div>
+
+      <section class="note" aria-labelledby="autosave-title">
+        <p class="eyebrow">Your working session</p>
+        <h2 id="autosave-title">Local autosave, not cloud storage</h2>
+        <p>Pele Studio stores your current diagram source, title, theme, and export settings in this browser using IndexedDB. The editor can restore that session when you return in the same browser profile. It does not synchronize your diagrams across devices or provide a cloud document library.</p>
+        <p>Autosave is best effort: private browsing, storage limits, or clearing site data can prevent saving or remove saved work. Keep a separate copy of important Mermaid source in a text file. PNG and SVG exports are images, not backups of your editable source.</p>
+      </section>
+
+      <section class="text-section project-note" aria-labelledby="project-title">
+        <h2 id="project-title">Built on Pele</h2>
+        <p>Rendering, parsing, and layout come from <a href="https://pele.run">Pele</a>, a diagram-rendering library with Mermaid-compatible syntax. Pele Studio is an unofficial editor built on that library and is not affiliated with the Pele project. The Pele name and logo belong to their creator, kepano.</p>
+        <p>You can inspect the implementation and self-hosting instructions in the <a href="https://github.com/l-velazquez/pele-studio">Pele Studio source repository</a>.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>Pele Studio <span class="footer-divider" aria-hidden="true">/</span> Write. Preview. Customize. Export.</p>
+        <nav aria-label="Footer navigation">
+          <a href="/">Editor</a>
+          <a href="/guides/mermaid-to-png/">Mermaid export guide</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

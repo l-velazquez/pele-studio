@@ -1,4 +1,4 @@
-import { Check, ExternalLink, FileUp, LayoutTemplate, MoreVertical } from 'lucide-react'
+import { BookOpen, Check, ExternalLink, FileUp, LayoutTemplate, MoreVertical } from 'lucide-react'
 import { DropdownMenu as DM } from 'radix-ui'
 import { APPEARANCES, type Appearance } from '../lib/appearance'
 import { Button } from './ui'
@@ -34,6 +34,11 @@ export function MobileMenu({
           </DM.Item>
           <DM.Item className={itemClass} onSelect={onImport}>
             <FileUp className="size-4 text-zinc-500 dark:text-zinc-400" /> Import file
+          </DM.Item>
+          <DM.Item className={itemClass} asChild>
+            <a href={`${import.meta.env.BASE_URL}about/`} target="_blank" rel="noopener noreferrer" aria-label="About Pele Studio and guides (opens in a new tab)">
+              <BookOpen className="size-4 text-zinc-500 dark:text-zinc-400" /> About &amp; guides
+            </a>
           </DM.Item>
           <DM.Item className={itemClass} asChild>
             <a href={repoUrl} target="_blank" rel="noopener noreferrer">

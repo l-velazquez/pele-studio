@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Mermaid to PNG or SVG: an export guide — Pele Studio</title>
+    <meta name="description" content="Convert Mermaid diagrams to PNG or SVG in Pele Studio. Follow steps for transparent backgrounds, PNG resolution, padding, embedded fonts, and PowerPoint.">
+    <link rel="canonical" href="https://pele-studio.cc/guides/mermaid-to-png/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/guides/guides.css">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Pele Studio">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Mermaid to PNG or SVG: an export guide — Pele Studio">
+    <meta property="og:description" content="Export Mermaid diagrams with transparent backgrounds, choose PNG resolution and padding, and understand SVG font limitations in PowerPoint.">
+    <meta property="og:url" content="https://pele-studio.cc/guides/mermaid-to-png/">
+    <meta property="og:image" content="https://pele-studio.cc/social-preview.png">
+    <meta property="og:image:secure_url" content="https://pele-studio.cc/social-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pele Studio — Mermaid diagram editor">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mermaid to PNG or SVG: an export guide — Pele Studio">
+    <meta name="twitter:description" content="Export Mermaid diagrams with transparent backgrounds, choose PNG resolution and padding, and understand SVG font limitations in PowerPoint.">
+    <meta name="twitter:image" content="https://pele-studio.cc/social-preview.png">
+    <meta name="twitter:image:alt" content="Pele Studio — Mermaid diagram editor">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Pele Studio editor">
+          <img src="/favicon.svg" width="28" height="28" alt="">
+          <span>Pele Studio</span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href="/">Editor</a>
+          <a href="/about/">About</a>
+          <a href="/guides/mermaid-to-png/" aria-current="page">Export guide</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell" tabindex="-1">
+      <article>
+        <header class="hero guide-hero">
+          <p class="eyebrow">A practical export guide</p>
+          <h1>How to export Mermaid diagrams as PNG or SVG</h1>
+          <p class="lead">Turn Mermaid source into an image for a document, a slide, or a web page. Here is how to choose the format, remove the background, and get the right size in Pele Studio.</p>
+          <div class="actions">
+            <a class="button button-primary" href="/">Open the editor <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="#example">Start with the example</a>
+          </div>
+        </header>
+
+        <div class="guide-layout">
+          <aside class="contents">
+            <nav aria-label="On this page">
+              <p class="eyebrow">On this page</p>
+              <ol>
+                <li><a href="#example">Prepare the source</a></li>
+                <li><a href="#png">Export a PNG</a></li>
+                <li><a href="#transparent">Transparent backgrounds</a></li>
+                <li><a href="#svg">Export an SVG</a></li>
+                <li><a href="#fonts">Fonts and PowerPoint</a></li>
+                <li><a href="#troubleshooting">Check the result</a></li>
+              </ol>
+            </nav>
+          </aside>
+
+          <div class="article-body">
+            <section id="example" aria-labelledby="example-title">
+              <h2 id="example-title">1. Prepare your Mermaid source</h2>
+              <p>Open the <a href="/">Pele Studio editor</a> and paste your Mermaid source into the code panel. On a phone, select the <strong>Code</strong> tab. You can also use <strong>Import</strong> to open a <code>.mmd</code> file or a Markdown file containing a fenced Mermaid block.</p>
+              <p>For a small example, copy this flowchart. It shows a review loop: keep editing until the diagram is ready to export.</p>
+              <figure class="code-example">
+                <figcaption>Example source <span>Mermaid · flowchart</span></figcaption>
+                <pre tabindex="0" aria-label="Mermaid flowchart source"><code>flowchart LR
+    A[Write Mermaid] --> B[Preview diagram]
+    B --> C{Ready to share?}
+    C -->|Not yet| A
+    C -->|Yes| D[Export PNG or SVG]</code></pre>
+              </figure>
+              <p>The editor link opens your usual working session; it does not load this example automatically. Save a separate copy of any source you want to keep before replacing it.</p>
+              <p>Check the live preview and fix any reported syntax errors. The last valid diagram can remain visible while the current source has an error. Choose a theme and font in the design panel, and give the diagram a title to set a useful export filename.</p>
+            </section>
+
+            <section id="png" aria-labelledby="png-title">
+              <h2 id="png-title">2. Export a PNG at the right size</h2>
+              <p>PNG is a raster image. It is useful when you want the rendered text and shapes to look consistent in a slide or document without relying on that application’s SVG font support.</p>
+              <ol class="instructions">
+                <li>Open <strong>Export</strong> in the toolbar. On a phone, use the export icon. You can also use <kbd>Ctrl</kbd> + <kbd>E</kbd> on Windows or Linux, or <kbd>⌘</kbd> + <kbd>E</kbd> on macOS.</li>
+                <li>Under <strong>Format</strong>, select <strong>PNG</strong>.</li>
+                <li>Choose <strong>Resolution</strong>: <strong>1×</strong>, <strong>2×</strong>, <strong>3×</strong>, or <strong>4×</strong>. Higher scales produce more pixels for the same diagram, which helps when you need to display it larger. Start with 2× and check the output dimensions shown near the filename.</li>
+                <li>Choose your <strong>Background</strong>, then adjust <strong>Padding</strong> to leave space around the diagram. For example, start with 32 px and reduce it if you need a tighter crop. The slider runs from 0 to 160 px.</li>
+                <li>Review the export preview and select <strong>Download PNG</strong>. On phones with file sharing available, the download button may simply say <strong>Download</strong>. <strong>Copy image</strong> is another option if your browser supports image clipboard access.</li>
+              </ol>
+              <div class="note compact-note">
+                <h3>Scale can be reduced automatically</h3>
+                <p>Very large diagrams can exceed browser canvas limits. Pele Studio caps the effective PNG scale and shows a reduction notice when it is lower than your selection. Trust the displayed pixel dimensions rather than assuming 4× was used. Preview zoom does not change export resolution: the export is rendered fresh at its natural size.</p>
+              </div>
+              <p>A higher scale does not replace readable typography. If labels look too small at the final display size, increase the font size in the design panel before exporting.</p>
+            </section>
+
+            <section id="transparent" aria-labelledby="transparent-title">
+              <h2 id="transparent-title">3. Use a transparent background</h2>
+              <p>In the export dialog, under <strong>Background</strong>, select <strong>None</strong>. This is the transparent option for both PNG and SVG. <strong>Theme</strong> includes the theme’s background color; <strong>Custom</strong> lets you pick a different solid color.</p>
+              <p>The checkerboard behind the preview indicates transparency. It is a preview aid, not a pattern added to the exported image. Padding still adds space around a transparent diagram, but that space has no solid background.</p>
+              <p>Removing the background does not recolor the diagram or make the node fills transparent. A dark theme can have light text that becomes difficult to see on a white slide. Choose colors for the intended destination, then place the downloaded image on that actual background to check contrast.</p>
+            </section>
+
+            <section id="svg" aria-labelledby="svg-title">
+              <h2 id="svg-title">4. Choose SVG for a vector export</h2>
+              <p>SVG keeps the diagram as vector shapes and text, making it useful for resizing in applications that support the file. It does not have the PNG resolution selector.</p>
+              <ol class="instructions">
+                <li>Open <strong>Export</strong> and select <strong>SVG</strong> under <strong>Format</strong>.</li>
+                <li>Set <strong>Background</strong> to <strong>Theme</strong>, <strong>None</strong>, or <strong>Custom</strong>, and adjust <strong>Padding</strong>.</li>
+                <li>Decide whether to keep <strong>Embed fonts</strong> enabled. For bundled fonts, embedding includes font data in the SVG for viewers that support it. Disabling it can make the SVG smaller, but the viewer must supply a matching font or use a fallback.</li>
+                <li>Choose <strong>Download SVG</strong>, or <strong>Copy SVG code</strong> if you need the markup and your browser allows clipboard access.</li>
+              </ol>
+              <p>The export resolves the diagram’s CSS variables into explicit values so its colors are not dependent on the editor’s styles. This improves portability, but font handling still depends on the destination application.</p>
+            </section>
+
+            <section id="fonts" aria-labelledby="fonts-title">
+              <h2 id="fonts-title">5. Watch for font substitution in PowerPoint</h2>
+              <p>Embedding fonts is not a guarantee of identical SVG typography everywhere. Apps such as <strong>PowerPoint</strong> and <strong>Illustrator</strong> ignore embedded <code>@font-face</code> rules and use an installed font or fallback. Text can change appearance or fit differently even when the shapes remain sharp.</p>
+              <p>If exact typography matters in those apps, use <strong>PNG</strong> and choose enough resolution for the size you will place it at. For SVG, use a font available on the destination computer and inspect the imported result. Classic system-font selections depend on installed fonts; they do not have a bundled font file for Pele Studio to embed.</p>
+            </section>
+
+            <section id="troubleshooting" aria-labelledby="check-title">
+              <h2 id="check-title">6. Check the downloaded result</h2>
+              <dl class="checklist">
+                <div>
+                  <dt>The PNG looks blurry when enlarged</dt>
+                  <dd>Export at a higher resolution and check for an automatic scale-reduction notice. Avoid stretching a raster image beyond its useful pixel size; consider SVG if the destination supports it.</dd>
+                </div>
+                <div>
+                  <dt>The transparent image appears to have a solid background</dt>
+                  <dd>Some image viewers display transparent areas on white or black. Place the file on a colored background to check it, and confirm that <strong>Background → None</strong> was selected.</dd>
+                </div>
+                <div>
+                  <dt>Copying does not work</dt>
+                  <dd>Clipboard support and permissions vary by browser. Use the download button instead. Where supported, the dialog also offers a system share option.</dd>
+                </div>
+                <div>
+                  <dt>You need to edit the diagram later</dt>
+                  <dd>Keep the Mermaid source separately as text, for example in a <code>.mmd</code> file. Browser-local autosave is a working-session convenience, not a cloud backup, and exporting an image does not preserve an editable Mermaid document.</dd>
+                </div>
+              </dl>
+            </section>
+
+            <div class="closing">
+              <h2>Ready to export your diagram?</h2>
+              <p>Start with your source, check the preview, and choose the format that fits where the diagram will be used.</p>
+              <a class="button button-primary" href="/">Open Pele Studio <span aria-hidden="true">→</span></a>
+              <p class="small-text">Learn more about the editor and local autosave on the <a href="/about/">About page</a>.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>Pele Studio <span class="footer-divider" aria-hidden="true">/</span> Write. Preview. Customize. Export.</p>
+        <nav aria-label="Footer navigation">
+          <a href="/">Editor</a>
+          <a href="/about/">About Pele Studio</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
