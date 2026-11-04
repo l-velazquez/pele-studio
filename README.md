@@ -17,7 +17,7 @@ Create diagrams and export it.
 - **Export**: PNG at 1–4× or SVG, with theme, transparent, or custom background, adjustable padding, and copy to clipboard.
 - **Templates, import, autosave**: 12 starter diagrams, `.mmd`/`.md` import (button, ⌘O, or drag and drop), and IndexedDB autosave.
 
-Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name belongs to its creator [@kepano](https://x.com/kepano).
+Rendering, parsing, and layout come from [Pele](https://pele.run). Pele Studio is an unofficial editor built on Pele and is not affiliated with the Pele project. The Pele name and logo belong to their creator [@kepano](https://x.com/kepano).
 
 ## About Pele
 
