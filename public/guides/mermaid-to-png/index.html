@@ -8,6 +8,14 @@
     <meta name="description" content="Convert Mermaid diagrams to PNG or SVG in Pele Studio. Follow steps for transparent backgrounds, PNG resolution, padding, embedded fonts, and PowerPoint.">
     <link rel="canonical" href="https://pele-studio.cc/guides/mermaid-to-png/">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script>
+      // Match the editor's Light/Dark/System setting (see src/lib/appearance.ts).
+      try {
+        var a = localStorage.getItem('pele-studio:appearance')
+        if (a === 'dark' || (a !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+      } catch (e) {}
+    </script>
+    <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/guides/guides.css">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Pele Studio">
@@ -20,19 +28,19 @@
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Pele Studio — Mermaid diagram editor">
+    <meta property="og:image:alt" content="Pele Studio: Mermaid diagrams, ready to present. A flowchart preview in the editor.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Mermaid to PNG or SVG: an export guide — Pele Studio">
     <meta name="twitter:description" content="Export Mermaid diagrams with transparent backgrounds, choose PNG resolution and padding, and understand SVG font limitations in PowerPoint.">
     <meta name="twitter:image" content="https://pele-studio.cc/social-preview.png">
-    <meta name="twitter:image:alt" content="Pele Studio — Mermaid diagram editor">
+    <meta name="twitter:image:alt" content="Pele Studio: Mermaid diagrams, ready to present. A flowchart preview in the editor.">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="/" aria-label="Pele Studio editor">
-          <img src="/favicon.svg" width="28" height="28" alt="">
+          <svg viewBox="268 189 480 480" aria-hidden="true" focusable="false"><path d="M446.5,587.034C285.826,587.034 285.661,587.101 285.035,586.5C284.922,586.392 284.959,561.493 285.99,553.559C295.584,479.716 337.044,438.634 358.889,376.643C382.158,310.609 401.558,270.702 443.475,271.797C448.105,271.918 494.266,325.161 499.737,358.452C504.506,387.467 501.222,405.178 475.772,430.764C473.208,433.341 473.553,434.369 476.73,436.059C514.727,456.279 538.251,420.749 540.427,421.732C541.333,422.142 556.793,435.146 557.165,435.723C558.874,438.372 521.534,482.163 471.623,460.195C460.999,455.519 457.418,451.055 455.75,453.674C442.495,474.492 452.183,492.425 453.77,495.363C467.902,521.521 484.587,526.14 484.694,554.5C484.804,583.988 485.871,584.335 484.303,586.342C483.378,587.525 477.818,586.674 446.5,587.034Z"/><path d="M723.5,587.034C554.268,587.034 554.111,587.099 553.492,586.509C553.343,586.366 551.536,574.005 554.698,568.616C561.612,556.831 588.319,567.239 601.253,542.367C613.144,519.501 593.33,509.704 604.975,494.886C608.335,490.611 609.695,490.807 608.658,488.405C607.969,486.809 592.802,474.06 593.36,471.458C594.217,467.455 616.835,444.538 596.209,425.837C584.359,415.092 546.359,405.704 534.623,367.462C524.084,333.116 519.397,321.429 479.187,276.765C475.961,273.182 474.618,273.187 475.875,271.933C476.062,271.746 524.687,271.353 529.541,272.294C572.195,280.56 582.355,308.469 606.867,340.215C674.995,428.451 730.422,486.675 729.743,584.505C729.722,587.546 727.306,586.963 723.5,587.034Z"/></svg>
           <span>Pele Studio</span>
         </a>
         <nav class="site-nav" aria-label="Main navigation">
@@ -50,7 +58,7 @@
           <h1>How to export Mermaid diagrams as PNG or SVG</h1>
           <p class="lead">Turn Mermaid source into an image for a document, a slide, or a web page. Here is how to choose the format, remove the background, and get the right size in Pele Studio.</p>
           <div class="actions">
-            <a class="button button-primary" href="/">Open the editor <span aria-hidden="true">→</span></a>
+            <a class="button button-primary" href="/">Open the editor <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
             <a class="button button-secondary" href="#example">Start with the example</a>
           </div>
         </header>
@@ -75,7 +83,7 @@
               <h2 id="example-title">1. Prepare your Mermaid source</h2>
               <p>Open the <a href="/">Pele Studio editor</a> and paste your Mermaid source into the code panel. On a phone, select the <strong>Code</strong> tab. You can also use <strong>Import</strong> to open a <code>.mmd</code> file or a Markdown file containing a fenced Mermaid block.</p>
               <p>For a small example, copy this flowchart. It shows a review loop: keep editing until the diagram is ready to export.</p>
-              <figure class="code-example">
+              <figure class="card code-example">
                 <figcaption>Example source <span>Mermaid · flowchart</span></figcaption>
                 <pre tabindex="0" aria-label="Mermaid flowchart source"><code>flowchart LR
     A[Write Mermaid] --> B[Preview diagram]
@@ -97,7 +105,7 @@
                 <li>Choose your <strong>Background</strong>, then adjust <strong>Padding</strong> to leave space around the diagram. For example, start with 32 px and reduce it if you need a tighter crop. The slider runs from 0 to 160 px.</li>
                 <li>Review the export preview and select <strong>Download PNG</strong>. On phones with file sharing available, the download button may simply say <strong>Download</strong>. <strong>Copy image</strong> is another option if your browser supports image clipboard access.</li>
               </ol>
-              <div class="note compact-note">
+              <div class="card compact-note">
                 <h3>Scale can be reduced automatically</h3>
                 <p>Very large diagrams can exceed browser canvas limits. Pele Studio caps the effective PNG scale and shows a reduction notice when it is lower than your selection. Trust the displayed pixel dimensions rather than assuming 4× was used. Preview zoom does not change export resolution: the export is rendered fresh at its natural size.</p>
               </div>
@@ -151,10 +159,10 @@
               </dl>
             </section>
 
-            <div class="closing">
+            <div class="card closing">
               <h2>Ready to export your diagram?</h2>
               <p>Start with your source, check the preview, and choose the format that fits where the diagram will be used.</p>
-              <a class="button button-primary" href="/">Open Pele Studio <span aria-hidden="true">→</span></a>
+              <a class="button button-primary" href="/">Open Pele Studio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
               <p class="small-text">Learn more about the editor and local autosave on the <a href="/about/">About page</a>.</p>
             </div>
           </div>
@@ -164,7 +172,7 @@
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p>Pele Studio <span class="footer-divider" aria-hidden="true">/</span> Write. Preview. Customize. Export.</p>
+        <p><strong>Pele Studio</strong> <span aria-hidden="true">·</span> Free, open source, runs in your browser.</p>
         <nav aria-label="Footer navigation">
           <a href="/">Editor</a>
           <a href="/about/">About Pele Studio</a>
