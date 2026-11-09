@@ -1,11 +1,12 @@
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { HighlightStyle, bracketMatching, indentOnInput, syntaxHighlighting } from '@codemirror/language'
 import { lintGutter, setDiagnostics, type Diagnostic } from '@codemirror/lint'
-import { EditorState } from '@codemirror/state'
+import { Compartment, EditorState } from '@codemirror/state'
 import { EditorView, drawSelection, highlightActiveLine, highlightActiveLineGutter, keymap, lineNumbers, placeholder } from '@codemirror/view'
 import { tags as t } from '@lezer/highlight'
 import { mermaid } from 'codemirror-lang-mermaid'
 import { useEffect, useRef } from 'react'
+import { mermaidFallback, usesGrammar } from '../lib/mermaid-highlight'
 import type { DiagramError } from '../lib/pele'
 
 const highlight = HighlightStyle.define([
@@ -13,10 +14,23 @@ const highlight = HighlightStyle.define([
   { tag: [t.string, t.special(t.string)], color: 'var(--cm-string)' },
   { tag: [t.comment, t.lineComment], color: 'var(--cm-muted)', fontStyle: 'italic' },
   { tag: [t.number], color: 'var(--cm-number)' },
-  { tag: [t.operator, t.punctuation, t.arithmeticOperator], color: 'var(--cm-operator)' },
+  { tag: [t.operator, t.punctuation, t.arithmeticOperator, t.contentSeparator], color: 'var(--cm-operator)' },
   { tag: [t.variableName, t.labelName], color: 'var(--cm-variable)' },
-  { tag: [t.definitionKeyword, t.modifier], color: 'var(--cm-modifier)' },
+  { tag: [t.definitionKeyword, t.modifier, t.attributeName], color: 'var(--cm-modifier)' },
+  { tag: [t.meta], color: 'var(--cm-muted)' },
 ])
+
+// The lezer grammar covers a handful of diagram types; everything else gets the token-level fallback.
+const language = new Compartment()
+const languageFor = (source: string) => (usesGrammar(source) ? mermaid() : mermaidFallback)
+
+const switchLanguage = EditorState.transactionExtender.of((tr) => {
+  if (!tr.docChanged) return null
+  // The diagram keyword sits near the top, so only the head of the document matters.
+  const before = tr.startState.doc.sliceString(0, 4000)
+  const after = tr.newDoc.sliceString(0, 4000)
+  return usesGrammar(before) === usesGrammar(after) ? null : { effects: language.reconfigure(languageFor(after)) }
+})
 
 const theme = EditorView.theme({
   '&': { backgroundColor: 'transparent', color: 'var(--cm-text)' },
@@ -51,7 +65,8 @@ export function DiagramEditor({ value, onChange, error }: { value: string; onCha
           bracketMatching(),
           highlightActiveLine(),
           lintGutter(),
-          mermaid(),
+          language.of(languageFor(value)),
+          switchLanguage,
           syntaxHighlighting(highlight),
           theme,
           placeholder('flowchart LR\n  A --> B'),
